@@ -20,7 +20,7 @@ type Scale struct {
 }
 
 func (s *Scale) String() string {
-     return s.Code
+	return s.Code
 }
 
 type Ring struct {
@@ -28,7 +28,7 @@ type Ring struct {
 }
 
 func (r *Ring) String() string {
-     return r.Code
+	return r.Code
 }
 
 type Subfield struct {
@@ -37,7 +37,7 @@ type Subfield struct {
 }
 
 func (sf *Subfield) String() string {
-     return fmt.Sprintf("%s%s", sf.Code, sf.Value)
+	return fmt.Sprintf("%s%s", sf.Code, sf.Value)
 }
 
 type Parsed struct {
@@ -48,15 +48,15 @@ type Parsed struct {
 
 func (p *Parsed) String() string {
 
-     subfields := make([]string, 0)
+	subfields := make([]string, 0)
 
-     // sudo do this alphabetically...
-     
-     for _, s := range p.Subfields {
-     	subfields = append(subfields, s.String())
-     }
+	// sudo do this alphabetically...
 
-     return p.Scale.String() + p.Ring.String() + strings.Join(subfields, "")
+	for _, s := range p.Subfields {
+		subfields = append(subfields, s.String())
+	}
+
+	return p.Scale.String() + p.Ring.String() + strings.Join(subfields, "")
 }
 
 type Coord struct {
@@ -235,33 +235,33 @@ func Parse034(raw string) (*Parsed, error) {
 
 func (p *Parsed) BoundingBox() (*BoundingBox, error) {
 
-	coord_w, err := Parse034Coordinate(p.Subfields["$d"].Value)
+	coord_w, err := Parse034Coordinate(p.Subfields["$d"].Value, "W")
 
 	if err != nil {
 		return nil, err
 	}
 
-	coord_e, err := Parse034Coordinate(p.Subfields["$e"].Value)
+	coord_e, err := Parse034Coordinate(p.Subfields["$e"].Value, "E")
 
 	if err != nil {
 		return nil, err
 	}
 
-	coord_n, err := Parse034Coordinate(p.Subfields["$f"].Value)
+	coord_n, err := Parse034Coordinate(p.Subfields["$f"].Value, "N")
 
 	if err != nil {
 		return nil, err
 	}
 
-	coord_s, err := Parse034Coordinate(p.Subfields["$g"].Value)
+	coord_s, err := Parse034Coordinate(p.Subfields["$g"].Value, "S")
 
 	if err != nil {
 		return nil, err
 	}
 
 	sw := Point{
-		Latitude:  -coord_s.DD,
-		Longitude: -coord_w.DD,
+		Latitude:  coord_s.DD,
+		Longitude: coord_w.DD,
 	}
 
 	ne := Point{
@@ -273,7 +273,7 @@ func (p *Parsed) BoundingBox() (*BoundingBox, error) {
 	return &bbox, nil
 }
 
-func Parse034Coordinate(raw string) (*Coord, error) {
+func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {
 
 	// log.Println("PARSE COORD ", raw)
 
@@ -283,8 +283,11 @@ func Parse034Coordinate(raw string) (*Coord, error) {
 	// hdddmm.mmmm (hemisphere-degrees-minutes.decimal minutes)
 	// hdddmmss.sss (hemisphere-degrees-minutes-seconds.decimal seconds)
 
-	re_hdms, _ := regexp.Compile(`^(N|E|S|W)(\d{3})(\d{2})(\d{2})$`)
-	re_dms, _ := regexp.Compile(`^(\d{3})(\d{2})(\d{2})$`)
+	re_hdms, err := regexp.Compile(`^(N|E|S|W)(\d{3})(\d{2})(\d{2})$`)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if re_hdms.MatchString(raw) {
 
@@ -301,8 +304,18 @@ func Parse034Coordinate(raw string) (*Coord, error) {
 			return nil, err
 		}
 
+		if (hem == "S") || (hem == "W") {
+			dd = -dd
+		}
+
 		coord := Coord{DD: dd, Hemisphere: hem}
 		return &coord, nil
+	}
+
+	re_dms, err := regexp.Compile(`^(\d{3})(\d{2})(\d{2})$`)
+
+	if err != nil {
+		return nil, err
 	}
 
 	if re_dms.MatchString(raw) {
@@ -317,6 +330,34 @@ func Parse034Coordinate(raw string) (*Coord, error) {
 
 		if err != nil {
 			return nil, err
+		}
+
+		if (hemisphere == "S") || (hemisphere == "W") {
+			dd = -dd
+		}
+
+		coord := Coord{DD: dd, Hemisphere: ""}
+		return &coord, nil
+	}
+
+	re_dd, _ := regexp.Compile(`^(\+|\-)(\d{1,3}\.\d+)$`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if re_dd.MatchString(raw) {
+
+		m := re_dd.FindStringSubmatch(raw)
+
+		dd, err := strconv.ParseFloat(m[2], 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if m[1] == "-" {
+			dd = -dd
 		}
 
 		coord := Coord{DD: dd, Hemisphere: ""}

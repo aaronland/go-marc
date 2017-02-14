@@ -1,16 +1,20 @@
 package main
 
 import (
+	"flag"
 	"github.com/thisisaaronland/go-marc/fields"
 	"log"
 )
 
 func main() {
 
-	raw := "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000"
-	log.Println(raw)
-	
-	p, err := fields.Parse034(raw)
+	var f = flag.String("f", "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000", "...")
+
+	flag.Parse()
+
+	log.Println(*f)
+
+	p, err := fields.Parse034(*f)
 
 	if err != nil {
 		log.Fatal(err)
