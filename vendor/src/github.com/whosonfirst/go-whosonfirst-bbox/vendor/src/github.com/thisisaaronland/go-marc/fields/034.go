@@ -3,7 +3,6 @@ package fields
 import (
 	"errors"
 	"fmt"
-	"github.com/whosonfirst/go-whosonfirst-bbox"
 	_ "log"
 	"regexp"
 	"strconv"
@@ -63,6 +62,24 @@ func (p *Parsed) String() string {
 type Coord struct {
 	DD         float64
 	Hemisphere string
+}
+
+type Point struct {
+	Latitude  float64
+	Longitude float64
+}
+
+func (p *Point) String() string {
+	return fmt.Sprintf("%0.6f, %0.6f", p.Latitude, p.Longitude)
+}
+
+type BoundingBox struct {
+	SW Point
+	NE Point
+}
+
+func (b *BoundingBox) String() string {
+	return fmt.Sprintf("%s %s", b.SW.String(), b.NE.String())
 }
 
 func NewScale(code string) (*Scale, error) {
@@ -216,7 +233,7 @@ func Parse034(raw string) (*Parsed, error) {
 	return &p, nil
 }
 
-func (p *Parsed) BoundingBox() (bbox.BBOX, error) {
+func (p *Parsed) BoundingBox() (*BoundingBox, error) {
 
 	coord_w, err := Parse034Coordinate(p.Subfields["$d"].Value, "W")
 
@@ -242,12 +259,18 @@ func (p *Parsed) BoundingBox() (bbox.BBOX, error) {
 		return nil, err
 	}
 
-	minx := coord_w.DD
-	miny := coord_s.DD
-	maxx := coord_e.DD
-	maxy := coord_n.DD	
+	sw := Point{
+		Latitude:  coord_s.DD,
+		Longitude: coord_w.DD,
+	}
 
-	return bbox.NewBoundingBox(minx, miny, maxx, maxy)
+	ne := Point{
+		Latitude:  coord_n.DD,
+		Longitude: coord_e.DD,
+	}
+
+	bbox := BoundingBox{SW: sw, NE: ne}
+	return &bbox, nil
 }
 
 func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {

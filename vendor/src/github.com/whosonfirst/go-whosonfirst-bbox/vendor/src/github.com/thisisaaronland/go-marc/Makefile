@@ -9,7 +9,7 @@ self:   prep
 	mkdir -p src/github.com/thisisaaronland/go-marc/fields
 	cp fields/*.go src/github.com/thisisaaronland/go-marc/fields
 	cp marc.go src/github.com/thisisaaronland/go-marc/
-	cp -r vendor/src/* src/
+	# cp -r vendor/src/* src/
 
 rmdeps:
 	if test -d src; then rm -rf src; fi 
@@ -17,7 +17,7 @@ rmdeps:
 build:	fmt bin
 
 deps:
-	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-bbox"	
+	echo "no deps"
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
