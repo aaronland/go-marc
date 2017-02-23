@@ -17,7 +17,7 @@ Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and
 ```
 ./bin/034-to-bbox
 2017/02/13 22:23:38 1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000 <-- input (MARC 034)
-2017/02/13 22:23:38 -70.000000, -180.000000 84.000000, 180.000000 <-- output (decimal Mercator)
+2017/02/13 22:23:38 -70.000000, -180.000000 84.000000, 180.000000 <-- output (decimal WSG84)
 ```
 
 ## See also
