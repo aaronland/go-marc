@@ -42,9 +42,20 @@ static: self
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata-assetfs vendor/github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs/main.go
 	rm -f static/css/*~ static/javascript/*~ static/tangram/*~ static/fonts/*~
-	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg http static/javascript static/css
+	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg http static/javascript static/css static/images
 	if test -f http/static_fs.go; then rm http/static_fs.go; fi
 	mv bindata_assetfs.go http/static_fs.go
+
+leaflet:
+	if test -d tmp; then rm -rf tmp; fi
+	mkdir tmp
+	curl -s -o tmp/leaflet.zip http://cdn.leafletjs.com/leaflet/v1.2.0/leaflet.zip
+	unzip -d tmp tmp/leaflet.zip
+	mv tmp/leaflet.js static/javascript/
+	mv tmp/leaflet-src*.js static/javascript/
+	mv tmp/leaflet*.css static/css/
+	mv tmp/images/*.png static/images/
+	rm -rf tmp
 
 build:
 	@make assets
