@@ -28,7 +28,7 @@ curl 'http://localhost:8080/bbox?034=1%23%24aa$b22000000%24dW1800000%24eE1800000
 
 ## Docker
 
-[Yes](Docker}, for `marc-034d` at least.
+[Yes](Docker), for `marc-034d` at least.
 
 ## See also
 
