@@ -9,6 +9,28 @@ import (
 	"strings"
 )
 
+type GeoJSONCoordinate []float64
+
+type GeoJSONRing []GeoJSONCoordinate
+
+type GeoJSONPolygon []GeoJSONRing
+
+type GeoJSONGeometry struct {
+	Type        string         `json:"type"`
+	Coordinates GeoJSONPolygon `json:"coordinates"`
+}
+
+type GeoJSONProperties map[string]string
+
+type GeoJSONBoundingBox []float64
+
+type GeoJSONFeature struct {
+	Type        string             `json:"type"`
+	Geometry    GeoJSONGeometry    `json:"geometry"`
+	Properties  GeoJSONProperties  `json:"properties"`
+	BoundingBox GeoJSONBoundingBox `json:"bbox"`
+}
+
 type BboxResponse struct {
 	MinX float64 `json:"min_x"`
 	MinY float64 `json:"min_y"`
@@ -55,14 +77,38 @@ func BboxHandler() (gohttp.Handler, error) {
 			return
 		}
 
-		r := BboxResponse{
-			MinX: bbox.MinX(),
-			MinY: bbox.MinY(),
-			MaxX: bbox.MaxX(),
-			MaxY: bbox.MaxY(),
+		min_x := bbox.MinX()
+		min_y := bbox.MinY()
+		max_x := bbox.MaxX()
+		max_y := bbox.MaxY()
+
+		sw := GeoJSONCoordinate{min_x, min_y}
+		nw := GeoJSONCoordinate{min_x, max_y}
+		ne := GeoJSONCoordinate{max_x, max_y}
+		se := GeoJSONCoordinate{max_x, min_y}
+
+		geojson_ring := GeoJSONRing{sw, nw, ne, se, sw}
+		geojson_polygon := GeoJSONPolygon{geojson_ring}
+
+		geojson_geometry := GeoJSONGeometry{
+			Type:        "Polygon",
+			Coordinates: geojson_polygon,
 		}
 
-		enc, err := json.Marshal(r)
+		geojson_bbox := GeoJSONBoundingBox{min_x, min_y, max_x, max_y}
+
+		geojson_properties := GeoJSONProperties{
+			"marc:034": marc_clean,
+		}
+
+		geojson_feature := GeoJSONFeature{
+			Type:        "Feature",
+			Geometry:    geojson_geometry,
+			Properties:  geojson_properties,
+			BoundingBox: geojson_bbox,
+		}
+
+		enc, err := json.Marshal(geojson_feature)
 
 		if err != nil {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusInternalServerError)
