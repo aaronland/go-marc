@@ -150,9 +150,9 @@ func Parse034(raw string) (*Parsed, error) {
 	count := len(chars)
 
 	if count < 3 {
-	   	 return nil, errors.New("E_INSUFFICIENT_034")
+		return nil, errors.New("E_INSUFFICIENT_034")
 	}
-	
+
 	first := chars[0]
 	second := chars[1]
 	third := chars[2]

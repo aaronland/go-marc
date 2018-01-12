@@ -7,6 +7,7 @@ prep:
 self:   prep
 	if test -d src/github.com/thisisaaronland/go-marc; then rm -rf src/github.com/thisisaaronland/go-marc; fi
 	mkdir -p src/github.com/thisisaaronland/go-marc/fields
+	cp -r assets src/github.com/thisisaaronland/go-marc/
 	cp -r fields src/github.com/thisisaaronland/go-marc/
 	cp -r http src/github.com/thisisaaronland/go-marc/
 	cp marc.go src/github.com/thisisaaronland/go-marc/
@@ -20,12 +21,31 @@ build:	fmt bin
 deps:
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-sanitize"	
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-bbox"
+	@GOPATH=$(GOPATH) go get -u "github.com/jteeuwen/go-bindata/"
+	@GOPATH=$(GOPATH) go get -u "github.com/elazarl/go-bindata-assetfs/"
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
 	cp -r src/* vendor/
 	find vendor -name '.git' -print -type d -exec rm -rf {} +
 	rm -rf src
+
+assets: self
+	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
+	rm -rf templates/*/*~
+	rm -rf assets
+	mkdir -p assets/html
+	@GOPATH=$(GOPATH) bin/go-bindata -pkg html -o assets/html/html.go templates/html
+
+static: self
+	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
+	@GOPATH=$(GOPATH) go build -o bin/go-bindata-assetfs vendor/github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs/main.go
+	rm -f static/css/*~ static/javascript/*~ static/tangram/*~ static/fonts/*~
+	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg http static/javascript static/css
+	if test -f http/static_fs.go; then rm http/static_fs.go; fi
+	mv bindata_assetfs.go http/static_fs.go
+
+build: assets static
 
 fmt:
 	go fmt cmd/*.go

@@ -10,12 +10,11 @@ import (
 )
 
 type BboxResponse struct {
-     MinX	  float64 `json:"min_x"`
-     MinY	  float64 `json:"min_y"`
-     MaxX	  float64 `json:"max_x"`
-     MaxY	  float64 `json:"max_y"`    
+	MinX float64 `json:"min_x"`
+	MinY float64 `json:"min_y"`
+	MaxX float64 `json:"max_x"`
+	MaxY float64 `json:"max_y"`
 }
-
 
 func BboxHandler() (gohttp.Handler, error) {
 
@@ -41,7 +40,7 @@ func BboxHandler() (gohttp.Handler, error) {
 
 		// log.Println("RAW", marc_raw)
 		// log.Println("CLEAN", marc_clean)
-		
+
 		bounds, err := fields.Parse034(marc_clean)
 
 		if err != nil {
