@@ -46,7 +46,14 @@ static: self
 	if test -f http/static_fs.go; then rm http/static_fs.go; fi
 	mv bindata_assetfs.go http/static_fs.go
 
-build: assets static bin
+build:
+	@make assets
+	@make static
+	@make bin
+
+debug:
+	@make build
+	bin/marc-034d
 
 fmt:
 	go fmt cmd/*.go
@@ -60,7 +67,7 @@ bin: 	rmdeps self
 	@GOPATH=$(GOPATH) go build -o bin/marc-034d cmd/marc-034d.go
 
 docker-build:
-	docker build -t 034d .
+	docker build -t marc-034d .
 
 docker-debug: docker-build
-	docker run -it -p 8080:8080 034d
+	docker run -it -p 8080:8080 marc-034d

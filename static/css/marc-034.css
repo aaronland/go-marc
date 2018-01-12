@@ -1,0 +1,54 @@
+/* 034.css */
+
+.row {
+     margin-left:3%;
+     margin-right:3%;
+     margin-top:1%;
+     margin-bottom: 1%;
+}
+
+.panel {
+     width: 40%;
+     max-width: 40%;
+     min-height: 400px;
+     max-height: 400px;
+     float:left;
+     border:solid thin;
+}
+
+pre {
+     padding: 1em;
+     font-size:small;
+     font-family: monospace;
+}
+
+#bboxes {
+
+}
+
+#bboxes ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#bboxes ul li {
+	list-style-type:none;
+}
+
+#map {
+
+}
+
+#marc {
+      margin:3%;
+      margin-bottom:0px !important;
+}
+
+#raw {
+     overflow: scroll;
+     background-color:#ccc;
+}
+
+#results {
+
+}

@@ -11,22 +11,24 @@
 	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 
   	  <link rel="stylesheet" type="text/css" href="/css/index.css" />
-	  <link rel="stylesheet" type="text/css" href="/css/034.css" />
-	  
-	  <script type="text/javascript" src="/javascript/034.js"></script>
-	  
-	 <script type="text/javascript">
-	   window.addEventListener("load", function load(event){
-	   console.log("HELLO")
-	   });
-	 </script>
+
+	  <link rel="stylesheet" type="text/css" href="/css/marc-034.css" />
+	  <script type="text/javascript" src="/javascript/marc-034.js"></script>
   </head>
-  <body>
-    
+  <body>    
+
+    <div id="marc" class="row">
     <form>
-      <input type="text" name="034" placeholder="Enter a MARC 034 value here" value="" />
-      <button type="submit">Convert</button>
+      <input type="text" name="marc-034" id="marc-034" placeholder="Enter a MARC 034 value here" value="" size="64" />
+      <button id="submit" type="submit">convert to bounding box</button>
     </form>
-    
+    </div>
+
+    <div id="results">
+    <div id="bboxes" class="row"></div>
+    <div id="map" class="row panel"></div>
+    <div id="raw" class="row panel"></div>
+    </div>
+
   </body>
 </html>
