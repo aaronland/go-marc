@@ -14,9 +14,9 @@ RUN cd /go-marc; make bin
 
 FROM alpine
 
-COPY --from=build-env /go-marc/bin/034d /034d
+COPY --from=build-env /go-marc/bin/marc-034d /marc-034d
 
 EXPOSE 8080
 
-ENTRYPOINT /034d
+ENTRYPOINT /marc-034d
 

@@ -58,3 +58,9 @@ bin: 	rmdeps self
 	rm -rf bin/*
 	@GOPATH=$(GOPATH) go build -o bin/marc-034 cmd/marc-034.go
 	@GOPATH=$(GOPATH) go build -o bin/marc-034d cmd/marc-034d.go
+
+docker-build:
+	docker build -t 034d .
+
+docker-debug: docker-build
+	docker run -it -p 8080:8080 034d
