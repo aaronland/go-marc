@@ -45,7 +45,7 @@ static: self
 	if test -f http/static_fs.go; then rm http/static_fs.go; fi
 	mv bindata_assetfs.go http/static_fs.go
 
-build: assets static
+build: assets static bin
 
 fmt:
 	go fmt cmd/*.go

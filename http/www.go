@@ -11,13 +11,13 @@ type HTMLVars struct {
 
 func WWWHandler() (gohttp.Handler, error) {
 
-	tpl, err := html.Asset("templates/html/index.html")
+	tpl, err := html.Asset("templates/html/034.html")
 
 	if err != nil {
 		return nil, err
 	}
 
-	t := template.New("index")
+	t := template.New("034")
 
 	t, err = t.Parse(string(tpl))
 

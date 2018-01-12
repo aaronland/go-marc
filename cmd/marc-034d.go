@@ -22,14 +22,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/*
 	static_handler, err := http.StaticHandler()
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	*/
-	
+
 	bbox_handler, err := http.BboxHandler()
 
 	if err != nil {
@@ -45,8 +43,8 @@ func main() {
 	mux := gohttp.NewServeMux()
 
 	mux.Handle("/", www_handler)
-	// mux.Handle("/javascript/", static_handler)
-	// mux.Handle("/css/", static_handler)
+	mux.Handle("/javascript/", static_handler)
+	mux.Handle("/css/", static_handler)
 
 	mux.Handle("/bbox", bbox_handler)
 	mux.Handle("/ping", ping_handler)
