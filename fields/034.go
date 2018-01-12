@@ -149,6 +149,10 @@ func Parse034(raw string) (*Parsed, error) {
 	chars := strings.Split(raw, "")
 	count := len(chars)
 
+	if count < 3 {
+	   	 return nil, errors.New("E_INSUFFICIENT_034")
+	}
+	
 	first := chars[0]
 	second := chars[1]
 	third := chars[2]
@@ -245,7 +249,7 @@ func (p *Parsed) BoundingBox() (bbox.BBOX, error) {
 	minx := coord_w.DD
 	miny := coord_s.DD
 	maxx := coord_e.DD
-	maxy := coord_n.DD	
+	maxy := coord_n.DD
 
 	return bbox.NewBoundingBox(minx, miny, maxx, maxy)
 }
