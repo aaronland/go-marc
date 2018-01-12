@@ -23,6 +23,7 @@ deps:
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-bbox"
 	@GOPATH=$(GOPATH) go get -u "github.com/jteeuwen/go-bindata/"
 	@GOPATH=$(GOPATH) go get -u "github.com/elazarl/go-bindata-assetfs/"
+	rm -rf src/github.com/jteeuwen/go-bindata/testdata
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
