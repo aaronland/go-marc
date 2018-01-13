@@ -1,76 +1,88 @@
 package mapzenjs
 
 import (
+	"bufio"
 	"bytes"
 	"golang.org/x/net/html"
 	"io"
-	"io/ioutil"
 	_ "log"
 	"net/http"
-	"strings"
+	"net/http/httptest"
+	"strconv"
 )
 
-func MapzenAPIKeyHandler(next http.Handler, fs http.FileSystem, api_key string) (http.Handler, error) {
+type APIKeyHandler struct {
+	handler http.Handler
+	api_key string
+}
 
-	fn := func(rsp http.ResponseWriter, req *http.Request) {
+func MapzenAPIKeyHandler(handler http.Handler, api_key string) (http.Handler, error) {
 
-		path := req.URL.Path
+	h := APIKeyHandler{
+		handler: handler,
+		api_key: api_key,
+	}
 
-		if strings.HasSuffix(path, "/") {
-			path = path + "index.html"
-		}
+	return h, nil
+}
 
-		if !strings.HasSuffix(path, "index.html") {
-			next.ServeHTTP(rsp, req)
-			return
-		}
+func (h APIKeyHandler) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
+     
+	rec := httptest.NewRecorder()
+	h.handler.ServeHTTP(rec, req)
 
-		fh, err := fs.Open(path)
+	for k, v := range rec.Header() {
+		rsp.Header()[k] = v
+	}
 
-		if err != nil {
-			http.Error(rsp, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	rsp.Header().Set("X-We-Modified-This", "Yup")
+	rsp.WriteHeader(200)
 
-		body, err := ioutil.ReadAll(fh)
+	body := rec.Body.Bytes()
+	reader := bytes.NewReader(body)
+	doc, err := html.Parse(reader)
 
-		if err != nil {
-			http.Error(rsp, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		reader := bytes.NewReader(body)
-		doc, err := html.Parse(reader)
-
-		if err != nil {
-			http.Error(rsp, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		var f func(node *html.Node, writer io.Writer)
-
-		f = func(n *html.Node, w io.Writer) {
-
-			if n.Type == html.ElementNode && n.Data == "body" {
-
-				api_key_ns := ""
-				api_key_key := "data-mapzen-api-key"
-				api_key_value := api_key
-
-				api_key_attr := html.Attribute{api_key_ns, api_key_key, api_key_value}
-				n.Attr = append(n.Attr, api_key_attr)
-			}
-
-			for c := n.FirstChild; c != nil; c = c.NextSibling {
-				f(c, w)
-			}
-		}
-
-		f(doc, rsp)
-
-		html.Render(rsp, doc)
+	if err != nil {
+		http.Error(rsp, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	return http.HandlerFunc(fn), nil
+	var f func(node *html.Node, writer io.Writer)
+
+	f = func(n *html.Node, w io.Writer) {
+		
+		if n.Type == html.ElementNode && n.Data == "body" {
+
+			api_key_ns := ""
+			api_key_key := "data-mapzen-api-key"
+			api_key_value := h.api_key
+
+			api_key_attr := html.Attribute{api_key_ns, api_key_key, api_key_value}
+			n.Attr = append(n.Attr, api_key_attr)
+		}
+
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c, w)
+		}
+	}
+
+	var buf bytes.Buffer
+	wr := bufio.NewWriter(&buf)
+
+	f(doc, wr)
+
+	err = html.Render(wr, doc)
+
+	if err != nil {
+		http.Error(rsp, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	wr.Flush()
+
+	data := buf.Bytes()	
+	clen := len(data)
+
+	req.Header.Set("Content-Length", strconv.Itoa(clen))
+	rsp.Write(data)
 }

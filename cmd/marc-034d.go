@@ -15,9 +15,17 @@ func main() {
 	var host = flag.String("host", "localhost", "The hostname to listen for requests on")
 	var port = flag.Int("port", 8080, "The port number to listen for requests on")
 
+	var api_key = flag.String("mapzen-api-key", "mapzen-xxxxxx", "A valid Mapzen API key")
+
 	flag.Parse()
 
 	www_handler, err := http.WWWHandler()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	www_apikey_handler, err := mapzenjs.MapzenAPIKeyHandler(www_handler, *api_key)
 
 	if err != nil {
 		log.Fatal(err)
@@ -49,7 +57,7 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	mux.Handle("/", www_handler)
+	mux.Handle("/", www_apikey_handler)
 	mux.Handle("/javascript/", static_handler)
 	mux.Handle("/css/", static_handler)
 

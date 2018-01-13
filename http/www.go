@@ -34,7 +34,6 @@ func WWWHandler() (gohttp.Handler, error) {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusInternalServerError)
 			return
 		}
-
 	}
 
 	h := gohttp.HandlerFunc(fn)
