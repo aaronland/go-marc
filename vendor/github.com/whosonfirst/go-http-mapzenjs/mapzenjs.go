@@ -55,13 +55,6 @@ func (h MapzenJSWriter) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 	rec := httptest.NewRecorder()
 	h.handler.ServeHTTP(rec, req)
 
-	for k, v := range rec.Header() {
-		rsp.Header()[k] = v
-	}
-
-	rsp.Header().Set("X-We-Modified-This", "Yup")
-	rsp.WriteHeader(200)
-
 	body := rec.Body.Bytes()
 	reader := bytes.NewReader(body)
 	doc, err := html.Parse(reader)
@@ -147,6 +140,12 @@ func (h MapzenJSWriter) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	wr.Flush()
+	
+	for k, v := range rec.Header() {
+		rsp.Header()[k] = v
+	}
+
+	rsp.WriteHeader(200)
 
 	data := buf.Bytes()
 	clen := len(data)
