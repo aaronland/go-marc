@@ -1,10 +1,8 @@
 # go-marc
 
+Go package for working with MARC records.
+
 ## Important
-
-Too soon.
-
-## Really important
 
 Not all of MARC. Probably not ever. Just the `034` field so far.
 
@@ -25,7 +23,17 @@ Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and
 ```
 $> ./bin/marc-034d 
 2018/01/12 09:12:44 listening on localhost:8080
+```
 
+#### /
+
+The `/` (or default) endpoint will display a handy web interface for converting MARC 034 records in to bounding boxes.
+
+#### /bbox
+
+The `/bbox` endpoint will return a bounding box for a MARC 034 field as GeoJSON.
+
+```
 $> curl -s 'http://localhost:8080/bbox?034=1%23%24aa$b22000000%24dW1800000%24eE1800000%24fN0840000%24gS0700000' | python -mjson.tool
 
 {
@@ -68,6 +76,8 @@ $> curl -s 'http://localhost:8080/bbox?034=1%23%24aa$b22000000%24dW1800000%24eE1
     "type": "Feature"
 }
 ```
+
+_Note the way the `034` parameter is URL-encoded._
 
 ## Docker
 
