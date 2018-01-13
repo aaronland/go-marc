@@ -18,5 +18,5 @@ COPY --from=build-env /go-marc/bin/marc-034d /marc-034d
 
 EXPOSE 8080
 
-ENTRYPOINT /marc-034d
+CMD /marc-034d -host 0.0.0.0 -mapzen-api-key ${MAPZEN_APIKEY}
 
