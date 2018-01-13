@@ -2,6 +2,21 @@
 
 window.addEventListener("load", function load(event){
 
+		var api_key = document.body.getAttribute("data-mapzen-api-key");
+		L.Mapzen.apiKey = api_key;
+			
+		var map_opts = { tangramOptions: {
+				scene: L.Mapzen.BasemapStyles.Refill
+		}};
+		
+		var map = L.Mapzen.map('map', map_opts);
+
+		var sw = [ -55, -180 ];
+		var ne = [ 55, 180 ];
+		var bounds = [ sw, ne ];
+		
+		map.fitBounds(bounds);
+
 		var m = document.getElementById("marc-034");
 		m.value = "";
 
@@ -17,17 +32,28 @@ window.addEventListener("load", function load(event){
 				return false;
 			}
 
+			var enc = encodeURIComponent(m);
+			var url = location.protocol + "//" + location.host + "/bbox?034=" + enc;
+
 			var raw = document.getElementById("raw");
 			raw.innerHTML = "";
 
 			var bboxes = document.getElementById("bboxes");
 			bboxes.innerHTML = "";
 
+			var sw = [ -55, -180 ];
+			var ne = [ 55, 180 ];
+			var bounds = [ sw, ne ];
+		
+			map.fitBounds(bounds);
+
 			var on_success = function(rsp){
 				console.log("OK", rsp);
 
 				var str = JSON.stringify(rsp, null, 2);
 				var pre = document.createElement("pre");
+				pre.appendChild(document.createTextNode(url));
+				pre.appendChild(document.createTextNode("\n\n"));				
 				pre.appendChild(document.createTextNode(str));
 
 				var raw = document.getElementById("raw");
@@ -40,9 +66,9 @@ window.addEventListener("load", function load(event){
 				var maxy = bbox[3];
 				
 				var coords = {
-					"SW, NE": [ miny, minx, maxy, maxx ],
-					"WS, EN": [ minx, miny, maxx, maxy ],
-					"NE, SW": [ maxy, maxx, miny, minx ],
+					"S, W, N, E": [ miny, minx, maxy, maxx ],
+					"W, S, E, N": [ minx, miny, maxx, maxy ],
+					"N, E, S, W": [ maxy, maxx, miny, minx ],
 				}
 
 				var ul = document.createElement("ul");
@@ -64,6 +90,17 @@ window.addEventListener("load", function load(event){
 
 				var bboxes = document.getElementById("bboxes");
 				bboxes.appendChild(ul);
+
+				var sw = [ miny, minx ];
+				var ne = [ maxy, maxx ];
+				
+				var bounds = [ sw, ne ];
+				var opts = { padding: [50, 50] };
+
+				map.fitBounds(bounds, opts);
+
+				var layer = L.geoJSON(rsp);
+				layer.addTo(map);
 			};
 
 			var req = new XMLHttpRequest();
@@ -81,9 +118,6 @@ window.addEventListener("load", function load(event){
 
 				on_success(data);
 			};
-
-			var enc = encodeURIComponent(m);
-			var url = location.protocol + "//" + location.host + "/bbox?034=" + enc;
 			
 			req.open("get", url, true);
 			req.send();

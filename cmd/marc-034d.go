@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/thisisaaronland/go-marc/http"
+	"github.com/whosonfirst/go-http-mapzenjs"
 	"log"
 	gohttp "net/http"
 	"os"
@@ -28,6 +29,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	mapzenjs_handler, err := mapzenjs.MapzenJSHandler()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	bbox_handler, err := http.BboxHandler()
 
 	if err != nil {
@@ -45,6 +52,13 @@ func main() {
 	mux.Handle("/", www_handler)
 	mux.Handle("/javascript/", static_handler)
 	mux.Handle("/css/", static_handler)
+
+	mux.Handle("/javascript/mapzen.min.js", mapzenjs_handler)
+	mux.Handle("/javascript/tangram.min.js", mapzenjs_handler)
+	mux.Handle("/javascript/mapzen.js", mapzenjs_handler)
+	mux.Handle("/javascript/tangram.js", mapzenjs_handler)
+	mux.Handle("/css/mapzen.js.css", mapzenjs_handler)
+	mux.Handle("/tangram/refill-style.zip", mapzenjs_handler)
 
 	mux.Handle("/bbox", bbox_handler)
 	mux.Handle("/ping", ping_handler)

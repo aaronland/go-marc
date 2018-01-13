@@ -1,5 +1,13 @@
 /* 034.css */
 
+body {
+     font-family: sans-serif;
+}
+
+code { 
+     color: brown;
+}
+
 .row {
      margin-left:3%;
      margin-right:3%;
@@ -33,6 +41,7 @@ pre {
 
 #bboxes ul li {
 	list-style-type:none;
+	margin-bottom:.35em;
 }
 
 #map {

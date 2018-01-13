@@ -23,6 +23,7 @@ deps:
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-bbox"
 	@GOPATH=$(GOPATH) go get -u "github.com/jteeuwen/go-bindata/"
 	@GOPATH=$(GOPATH) go get -u "github.com/elazarl/go-bindata-assetfs/"
+	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-http-mapzenjs"
 	rm -rf src/github.com/jteeuwen/go-bindata/testdata
 
 vendor-deps: rmdeps deps
@@ -30,6 +31,24 @@ vendor-deps: rmdeps deps
 	cp -r src/* vendor/
 	find vendor -name '.git' -print -type d -exec rm -rf {} +
 	rm -rf src
+
+maps: tangram refill mapzenjs
+
+tangram:
+	if test ! -d static/tangram; then mkdir -p static/tangram; fi
+	curl -s -o static/javascript/tangram.js https://mapzen.com/tangram/tangram.debug.js
+	curl -s -o static/javascript/tangram.min.js https://mapzen.com/tangram/tangram.min.js
+
+refill:
+	if test ! -d static/tangram; then mkdir -p static/tangram; fi
+	curl -s -o static/tangram/refill-style.zip https://mapzen.com/carto/refill-style/refill-style.zip
+
+mapzenjs:
+	if test ! -d static/javascript; then mkdir -p static/javascript; fi
+	if test ! -d static/css; then mkdir -p static/css; fi
+	curl -s -o static/css/mapzen.js.css https://mapzen.com/js/mapzen.css
+	curl -s -o static/javascript/mapzen.js https://mapzen.com/js/mapzen.js
+	curl -s -o static/javascript/mapzen.min.js https://mapzen.com/js/mapzen.min.js
 
 assets: self
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
