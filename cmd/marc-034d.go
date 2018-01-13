@@ -25,7 +25,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	www_apikey_handler, err := mapzenjs.MapzenAPIKeyHandler(www_handler, *api_key)
+	opts := mapzenjs.DefaultMapzenJSOptions()
+	opts.APIKey = *api_key
+
+	www_mapzenjs_handler, err := mapzenjs.MapzenJSHandler(www_handler, opts)
 
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mapzenjs_handler, err := mapzenjs.MapzenJSHandler()
+	mapzenjs_assets_handler, err := mapzenjs.MapzenJSAssetsHandler()
 
 	if err != nil {
 		log.Fatal(err)
@@ -57,16 +60,16 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	mux.Handle("/", www_apikey_handler)
+	mux.Handle("/", www_mapzenjs_handler)
 	mux.Handle("/javascript/", static_handler)
 	mux.Handle("/css/", static_handler)
 
-	mux.Handle("/javascript/mapzen.min.js", mapzenjs_handler)
-	mux.Handle("/javascript/tangram.min.js", mapzenjs_handler)
-	mux.Handle("/javascript/mapzen.js", mapzenjs_handler)
-	mux.Handle("/javascript/tangram.js", mapzenjs_handler)
-	mux.Handle("/css/mapzen.js.css", mapzenjs_handler)
-	mux.Handle("/tangram/refill-style.zip", mapzenjs_handler)
+	mux.Handle("/javascript/mapzen.min.js", mapzenjs_assets_handler)
+	mux.Handle("/javascript/tangram.min.js", mapzenjs_assets_handler)
+	mux.Handle("/javascript/mapzen.js", mapzenjs_assets_handler)
+	mux.Handle("/javascript/tangram.js", mapzenjs_assets_handler)
+	mux.Handle("/css/mapzen.js.css", mapzenjs_assets_handler)
+	mux.Handle("/tangram/refill-style.zip", mapzenjs_assets_handler)
 
 	mux.Handle("/bbox", bbox_handler)
 	mux.Handle("/ping", ping_handler)
