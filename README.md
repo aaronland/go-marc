@@ -10,7 +10,16 @@ Not all of MARC. Probably not ever. Just the `034` field so far.
 
 ### marc-034
 
-Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and `dddmmss (degrees-minutes-seconds)` notation:
+Convert a MARC 034 string in to a (S, W, N, E) bounding box.
+
+```
+./bin/marc-034 -h
+Usage of ./bin/marc-034:
+  -f string
+    	A valid MARC 034 string (default "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000")
+```
+
+Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and `dddmmss (degrees-minutes-seconds)` notation. For example:
 
 ```
 ./bin/marc-034
@@ -20,10 +29,30 @@ Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and
 
 ### marc-034d
 
+A web server for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON)
+
 ```
-$> ./bin/marc-034d 
+./bin/marc-034d -h
+Usage of ./bin/marc-034d:
+  -host string
+    	The hostname to listen for requests on (default "localhost")
+  -httptest.serve string
+    	if non-empty, httptest.NewServer serves on this address and blocks
+  -mapzen-api-key string
+    	A valid Mapzen API key (default "mapzen-xxxxxx")
+  -port int
+    	The port number to listen for requests on (default 8080)
+```
+
+For example:
+
+```
+$> ./bin/marc-034d -mapzen-api-key mapzen-1a2b3c
+
 2018/01/12 09:12:44 listening on localhost:8080
 ```
+
+The `marc-034d` server exposes the following endpoints:
 
 #### /
 
@@ -86,4 +115,4 @@ _Note the way the `034` parameter is URL-encoded._
 ## See also
 
 * https://www.loc.gov/marc/bibliographic/bd034.html
-
+* https://github.com/whosonfirst/go-http-mapzenjs

@@ -42,7 +42,7 @@ assets:	self
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata-assetfs vendor/github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs/main.go
 	rm -f www/*~ www/css/*~ www/javascript/*~ www/tangram/*~
 	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg mapzenjs www www/javascript www/css www/tangram
-	mv bindata_assetfs.go mapzenjs_assets.go
+	mv bindata_assetfs.go assets.go
 
 wwwdirs:
 	if test ! -d www/javascript; then mkdir www/javascript; fi

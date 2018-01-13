@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	var f = flag.String("f", "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000", "...")
+	var f = flag.String("f", "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000", "A valid MARC 034 string")
 
 	flag.Parse()
 
