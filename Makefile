@@ -32,24 +32,6 @@ vendor-deps: rmdeps deps
 	find vendor -name '.git' -print -type d -exec rm -rf {} +
 	rm -rf src
 
-maps: tangram refill mapzenjs
-
-tangram:
-	if test ! -d static/tangram; then mkdir -p static/tangram; fi
-	curl -s -o static/javascript/tangram.js https://mapzen.com/tangram/tangram.debug.js
-	curl -s -o static/javascript/tangram.min.js https://mapzen.com/tangram/tangram.min.js
-
-refill:
-	if test ! -d static/tangram; then mkdir -p static/tangram; fi
-	curl -s -o static/tangram/refill-style.zip https://mapzen.com/carto/refill-style/refill-style.zip
-
-mapzenjs:
-	if test ! -d static/javascript; then mkdir -p static/javascript; fi
-	if test ! -d static/css; then mkdir -p static/css; fi
-	curl -s -o static/css/mapzen.js.css https://mapzen.com/js/mapzen.css
-	curl -s -o static/javascript/mapzen.js https://mapzen.com/js/mapzen.js
-	curl -s -o static/javascript/mapzen.min.js https://mapzen.com/js/mapzen.min.js
-
 assets: self
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
 	rm -rf templates/*/*~
@@ -60,10 +42,12 @@ assets: self
 static: self
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata/
 	@GOPATH=$(GOPATH) go build -o bin/go-bindata-assetfs vendor/github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs/main.go
-	rm -f static/css/*~ static/javascript/*~ static/tangram/*~ static/fonts/*~
-	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg http static/javascript static/css static/images
+	rm -f static/css/*~ static/javascript/*~
+	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg http static/javascript static/css
 	if test -f http/static_fs.go; then rm http/static_fs.go; fi
 	mv bindata_assetfs.go http/static_fs.go
+
+# please move this in to a go-http-leaflet package (20180113/thisisaaronland)
 
 leaflet:
 	if test -d tmp; then rm -rf tmp; fi

@@ -27,7 +27,7 @@ func MapzenAPIKeyHandler(handler http.Handler, api_key string) (http.Handler, er
 }
 
 func (h APIKeyHandler) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
-     
+
 	rec := httptest.NewRecorder()
 	h.handler.ServeHTTP(rec, req)
 
@@ -50,7 +50,7 @@ func (h APIKeyHandler) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 	var f func(node *html.Node, writer io.Writer)
 
 	f = func(n *html.Node, w io.Writer) {
-		
+
 		if n.Type == html.ElementNode && n.Data == "body" {
 
 			api_key_ns := ""
@@ -80,7 +80,7 @@ func (h APIKeyHandler) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 
 	wr.Flush()
 
-	data := buf.Bytes()	
+	data := buf.Bytes()
 	clen := len(data)
 
 	req.Header.Set("Content-Length", strconv.Itoa(clen))
