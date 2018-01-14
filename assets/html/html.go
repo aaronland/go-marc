@@ -83,7 +83,7 @@ func templatesHtmlMarc034Html() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "templates/html/marc-034.html", size: 1283, mode: os.FileMode(420), modTime: time.Unix(1515868767, 0)}
+	info := bindataFileInfo{name: "templates/html/marc-034.html", size: 1283, mode: os.FileMode(420), modTime: time.Unix(1515885013, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

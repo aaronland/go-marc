@@ -8,6 +8,17 @@ code {
      color: brown;
 }
 
+input[type=text] {
+		 padding: .3em;
+}
+
+/*
+button[type=submit] {
+        border: solid thin;
+	padding: .4em;
+}
+*/
+
 .row {
      margin-left:3%;
      margin-right:3%;
@@ -60,4 +71,19 @@ pre {
 
 #results {
 
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+
+input[type=text] {
+		 max-width: 275px !important;
+}
+
+       .panel {
+       	min-width: 275px !important;
+	max-width: 275px !important;
+	min-height: 150px !important;
+	max-height: 150px !important;
+	float:none !important
+       }
 }

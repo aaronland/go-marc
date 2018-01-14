@@ -67,7 +67,7 @@ build:
 
 debug:
 	@make build
-	bin/marc-034d
+	bin/marc-034d -mapzen-api-key $(MAPZEN_APIKEY)
 
 fmt:
 	go fmt cmd/*.go
@@ -81,7 +81,8 @@ bin: 	rmdeps self
 	@GOPATH=$(GOPATH) go build -o bin/marc-034d cmd/marc-034d.go
 
 docker-build:
+	@make build
 	docker build -t marc-034d .
 
 docker-debug: docker-build
-	docker run -it -p 8080:8080 e 'MAPZEN_APIKEY=$(MAPZEN_APIKEY)' marc-034d
+	docker run -it -p 8080:8080 -e 'MAPZEN_APIKEY=$(MAPZEN_APIKEY)' marc-034d

@@ -56,7 +56,9 @@ The `marc-034d` server exposes the following endpoints:
 
 #### /
 
-The `/` (or default) endpoint will display a handy web interface for converting MARC 034 records in to bounding boxes.
+The `/` (or default) endpoint will display a handy web interface for converting MARC 034 records in to bounding boxes. For example, here's what it looks like querying for `1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000`:
+
+![](docs/images/marc-034d-www.png)
 
 #### /bbox
 
@@ -111,6 +113,11 @@ _Note the way the `034` parameter is URL-encoded._
 ## Docker
 
 [Yes](Docker), for `marc-034d` at least.
+
+```
+docker build -t marc-034d .
+docker run -it -p 8080:8080 -e 'MAPZEN_APIKEY=$(MAPZEN_APIKEY)' marc-034d
+```
 
 ## See also
 

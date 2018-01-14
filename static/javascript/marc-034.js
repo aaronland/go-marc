@@ -10,7 +10,8 @@ window.addEventListener("load", function load(event){
 	L.Mapzen.apiKey = api_key;
 	
 	var map_opts = { tangramOptions: {
-	    scene: L.Mapzen.BasemapStyles.Refill
+			scene: L.Mapzen.BasemapStyles.Refill,
+			// scene: "/tangram/refill-style.zip"
 	}};
 	
 	map = L.Mapzen.map('map', map_opts);
@@ -25,7 +26,7 @@ window.addEventListener("load", function load(event){
     else {
 
 	var el = document.getElementById("map");
-	el.innerText = "Maps are disabled because mapzen.js is not present.");
+	el.innerText = "Maps are disabled because mapzen.js is not present.";
     }
     
     var m = document.getElementById("marc-034");
@@ -38,7 +39,7 @@ window.addEventListener("load", function load(event){
 	var m = document.getElementById("marc-034");
 	m = m.value;
 	m = m.trim();
-	
+
 	if (m == ""){
 	    return false;
 	}
@@ -61,7 +62,7 @@ window.addEventListener("load", function load(event){
 	}
 	
 	var on_success = function(rsp){
-	    
+
 	    var str = JSON.stringify(rsp, null, 2);
 	    var pre = document.createElement("pre");
 	    pre.appendChild(document.createTextNode(url));
@@ -72,10 +73,10 @@ window.addEventListener("load", function load(event){
 	    raw.appendChild(pre);
 	    
 	    var bbox = rsp["bbox"];
-	    var minx = bbox[0];
-	    var miny = bbox[1];
-	    var maxx = bbox[2];
-	    var maxy = bbox[3];
+	    var minx = bbox[0].toFixed(6);
+	    var miny = bbox[1].toFixed(6);
+	    var maxx = bbox[2].toFixed(6);
+	    var maxy = bbox[3].toFixed(6);
 	    
 	    var coords = {
 		"S, W, N, E": [ miny, minx, maxy, maxx ],
@@ -120,7 +121,7 @@ window.addEventListener("load", function load(event){
 	var req = new XMLHttpRequest();
 	
 	req.onload = function(){
-	    
+
 	    try {
 		var data = JSON.parse(this.responseText);
 	    }
@@ -132,7 +133,9 @@ window.addEventListener("load", function load(event){
 	    
 	    on_success(data);
 	};
-	
+
+	console.log("FETCH", url);
+
 	req.open("get", url, true);
 	req.send();
 	
