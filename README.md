@@ -54,7 +54,7 @@ $> ./bin/marc-034d -mapzen-api-key mapzen-1a2b3c
 
 The `marc-034d` server exposes the following endpoints:
 
-#### /
+#### / (or "root")
 
 The `/` (or default) endpoint will display a handy web interface for converting MARC 034 records in to bounding boxes. For example, here's what it looks like querying for `1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000`:
 
