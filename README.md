@@ -119,7 +119,13 @@ docker build -t marc-034d .
 docker run -it -p 8080:8080 -e 'MAPZEN_APIKEY=$(MAPZEN_APIKEY)' marc-034d
 ```
 
+## Caveats
+
+* There are still problems running this on `localhost` (for example from the Dockerfile on your laptop) under Firefox. I haven't had time to figure out if this is a paranoid security feature in Firefox or if I am just "doing it wrong".
+* Mapzen, [iknowrite](https://mapzen.com/blog/shutdown/)? Mapzen are shutting down as of February, 2018 and this package use Mapzen tiles (and the `mapzen.js` library) for displaying maps. The good news about the shutdown is that requiring an API key will be a moot point. The bad news is that it's not clear, as of this writing, where the vector tiles are going to come from. Either way this package uses the [go-http-mapzenjs](https://github.com/whosonfirst/go-http-mapzenjs) package to bundle all the `mapzen.js` assets and hide all the details from you so if there is a need to replace the Mapzen stuff with [ some other mapping provider ] it shouldn't be a big deal. The details are [over here](https://github.com/aaronland/go-marc/blob/master/cmd/marc-034d.go#L28-L43) if you're curious. For the time being you can still [sign up for a Mapzen API key](https://mapzen.com/developers/).
+
 ## See also
 
 * https://www.loc.gov/marc/bibliographic/bd034.html
 * https://github.com/whosonfirst/go-http-mapzenjs
+* https://mapzen.com/developers/
