@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/thisisaaronland/go-marc/fields"
+	"github.com/aaronland/go-marc/fields"
 	"log"
 )
 

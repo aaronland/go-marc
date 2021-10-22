@@ -29,11 +29,11 @@ func (c CloudwatchLogsRawData) Parse() (d CloudwatchLogsData, err error) {
 	if err != nil {
 		return
 	}
-	defer zr.Close()
 
-	dec := json.NewDecoder(zr)
-	err = dec.Decode(&d)
+	buf := &bytes.Buffer{}
+	buf.ReadFrom(zr)
 
+	err = json.Unmarshal(buf.Bytes(), &d)
 	return
 }
 
@@ -47,7 +47,7 @@ type CloudwatchLogsData struct {
 	LogEvents           []CloudwatchLogsLogEvent `json:"logEvents"`
 }
 
-// CloudwatchLogsLogEvent represents a log entry from cloudwatch logs
+// LogEvent represents a log entry from cloudwatch logs
 type CloudwatchLogsLogEvent struct {
 	ID        string `json:"id"`
 	Timestamp int64  `json:"timestamp"`

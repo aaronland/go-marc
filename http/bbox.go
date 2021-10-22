@@ -2,7 +2,7 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/thisisaaronland/go-marc/fields"
+	"github.com/aaronland/go-marc/fields"
 	"github.com/whosonfirst/go-sanitize"
 	_ "log"
 	gohttp "net/http"
