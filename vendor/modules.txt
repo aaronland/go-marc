@@ -1,0 +1,47 @@
+# github.com/aaronland/go-http-bootstrap v0.1.0
+## explicit
+github.com/aaronland/go-http-bootstrap
+github.com/aaronland/go-http-bootstrap/static
+# github.com/aaronland/go-http-leaflet v0.1.0
+github.com/aaronland/go-http-leaflet
+github.com/aaronland/go-http-leaflet/static
+# github.com/aaronland/go-http-ping/v2 v2.0.0
+## explicit
+github.com/aaronland/go-http-ping/v2
+# github.com/aaronland/go-http-rewrite v0.0.6
+github.com/aaronland/go-http-rewrite
+# github.com/aaronland/go-http-server v0.0.7
+## explicit
+github.com/aaronland/go-http-server
+# github.com/aaronland/go-http-tangramjs v0.1.1
+## explicit
+github.com/aaronland/go-http-tangramjs
+github.com/aaronland/go-http-tangramjs/static
+# github.com/aaronland/go-roster v0.0.2
+github.com/aaronland/go-roster
+# github.com/aws/aws-lambda-go v1.10.0
+github.com/aws/aws-lambda-go/events
+github.com/aws/aws-lambda-go/lambda
+github.com/aws/aws-lambda-go/lambda/handlertrace
+github.com/aws/aws-lambda-go/lambda/messages
+github.com/aws/aws-lambda-go/lambdacontext
+# github.com/elazarl/go-bindata-assetfs v1.0.1
+## explicit
+# github.com/thisisaaronland/go-marc v0.0.0-20180114181701-88cbeb264263
+## explicit
+github.com/thisisaaronland/go-marc/assets/html
+github.com/thisisaaronland/go-marc/fields
+# github.com/whosonfirst/algnhsa v0.1.0
+github.com/whosonfirst/algnhsa
+# github.com/whosonfirst/go-http-mapzenjs v0.0.0-20190722193037-4ed59e932ab4
+## explicit
+# github.com/whosonfirst/go-sanitize v0.1.0
+## explicit
+github.com/whosonfirst/go-sanitize
+# github.com/whosonfirst/go-whosonfirst-bbox v0.0.0-20170913151722-e1a4abe43723
+## explicit
+github.com/whosonfirst/go-whosonfirst-bbox
+# golang.org/x/net v0.0.0-20211020060615-d418f374d309
+## explicit
+golang.org/x/net/html
+golang.org/x/net/html/atom

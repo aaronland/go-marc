@@ -11,7 +11,7 @@ type HTMLVars struct {
 
 func WWWHandler() (gohttp.Handler, error) {
 
-	tpl, err := html.Asset("templates/html/marc-034.html")
+	tpl, err := html.Asset("marc-034.html")
 
 	if err != nil {
 		return nil, err

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"fmt"
-	"github.com/thisisaaronland/go-marc/http"
-	"github.com/whosonfirst/go-http-mapzenjs"
+	_ "fmt"
+	"github.com/aaronland/go-http-bootstrap"
+	"github.com/aaronland/go-http-ping/v2"
+	"github.com/aaronland/go-http-server"
+	"github.com/aaronland/go-http-tangramjs"
+	"github.com/aaronland/go-marc/http"
 	"log"
 	gohttp "net/http"
 	"os"
@@ -12,12 +16,34 @@ import (
 
 func main() {
 
-	var host = flag.String("host", "localhost", "The hostname to listen for requests on")
-	var port = flag.Int("port", 8080, "The port number to listen for requests on")
+	server_uri := flag.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
-	var api_key = flag.String("mapzen-api-key", "mapzen-xxxxxx", "A valid Mapzen API key")
+	nextzen_api_key := flag.String("nextzen-api-key", "mapzen-xxxxxx", "A valid Nextzen API key")
+	nextzen_style_url := flag.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
 	flag.Parse()
+
+	ctx := context.Background()
+
+	mux := gohttp.NewServeMux()
+
+	err := bootstrap.AppendAssetHandlers(mux)
+
+	if err != nil {
+		log.Fatalf("Failed to append Bootstrap asset handlers, %v", err)
+	}
+
+	err = tangramjs.AppendAssetHandlers(mux)
+
+	if err != nil {
+		log.Fatalf("Failed to append Tangram asset handlers, %v", err)
+	}
+
+	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
+
+	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
+	tangramjs_opts.NextzenOptions.APIKey = *nextzen_api_key
+	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url
 
 	www_handler, err := http.WWWHandler()
 
@@ -25,26 +51,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	opts := mapzenjs.DefaultMapzenJSOptions()
-	opts.APIKey = *api_key
-
-	www_mapzenjs_handler, err := mapzenjs.MapzenJSHandler(www_handler, opts)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	static_handler, err := http.StaticHandler()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	mapzenjs_assets_handler, err := mapzenjs.MapzenJSAssetsHandler()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	www_handler = tangramjs.AppendResourcesHandler(www_handler, tangramjs_opts)
+	www_handler = bootstrap.AppendResourcesHandler(www_handler, bootstrap_opts)
 
 	bbox_handler, err := http.BboxHandler()
 
@@ -52,35 +60,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ping_handler, err := http.PingHandler()
+	ping_handler, err := ping.PingPongHandler()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	mux := gohttp.NewServeMux()
-
-	mux.Handle("/", www_mapzenjs_handler)
-	mux.Handle("/javascript/", static_handler)
-	mux.Handle("/css/", static_handler)
-
-	mux.Handle("/javascript/mapzen.min.js", mapzenjs_assets_handler)
-	mux.Handle("/javascript/tangram.min.js", mapzenjs_assets_handler)
-	mux.Handle("/javascript/mapzen.js", mapzenjs_assets_handler)
-	mux.Handle("/javascript/tangram.js", mapzenjs_assets_handler)
-	mux.Handle("/css/mapzen.js.css", mapzenjs_assets_handler)
-	mux.Handle("/tangram/refill-style.zip", mapzenjs_assets_handler)
-
+	mux.Handle("/", www_handler)
 	mux.Handle("/bbox", bbox_handler)
 	mux.Handle("/ping", ping_handler)
 
-	address := fmt.Sprintf("%s:%d", *host, *port)
-	log.Printf("listening on %s\n", address)
-
-	err = gohttp.ListenAndServe(address, mux)
+	s, err := server.NewServer(ctx, *server_uri)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create new server, %v", err)
+	}
+
+	log.Printf("listening on %s\n", s.Address())
+
+	err = s.ListenAndServe(ctx, mux)
+
+	if err != nil {
+		log.Fatalf("Failed to serve requests, %v", err)
 	}
 
 	os.Exit(0)
