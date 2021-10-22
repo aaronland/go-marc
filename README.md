@@ -4,7 +4,7 @@ Go package for working with MARC records.
 
 ## Important
 
-Not all of MARC. Probably not ever. Just the `034` field so far.
+Not all of MARC. Probably not ever. Just the `034` field so far. If you are looking for a general-purpose library for working with MARC records I'd recommend looking at [miku/marc21](https://github.com/miku/marc21).
 
 ## Tools
 
