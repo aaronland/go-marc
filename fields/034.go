@@ -3,7 +3,7 @@ package fields
 import (
 	"errors"
 	"fmt"
-	"github.com/whosonfirst/go-whosonfirst-bbox"
+	"github.com/paulmach/orb"
 	_ "log"
 	"regexp"
 	"strconv"
@@ -220,7 +220,7 @@ func Parse034(raw string) (*Parsed, error) {
 	return &p, nil
 }
 
-func (p *Parsed) BoundingBox() (bbox.BBOX, error) {
+func (p *Parsed) Bound() (*orb.Bound, error) {
 
 	coord_w, err := Parse034Coordinate(p.Subfields["$d"].Value, "W")
 
@@ -251,7 +251,15 @@ func (p *Parsed) BoundingBox() (bbox.BBOX, error) {
 	maxx := coord_e.DD
 	maxy := coord_n.DD
 
-	return bbox.NewBoundingBox(minx, miny, maxx, maxy)
+	min := orb.Point{minx, miny}
+	max := orb.Point{maxx, maxy}
+
+	b := &orb.Bound{
+		Min: min,
+		Max: max,
+	}
+
+	return b, nil
 }
 
 func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {

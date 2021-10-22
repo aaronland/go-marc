@@ -63,24 +63,24 @@ func BboxHandler() (gohttp.Handler, error) {
 		// log.Println("RAW", marc_raw)
 		// log.Println("CLEAN", marc_clean)
 
-		bounds, err := fields.Parse034(marc_clean)
+		parsed, err := fields.Parse034(marc_clean)
 
 		if err != nil {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
 			return
 		}
 
-		bbox, err := bounds.BoundingBox()
+		bbox, err := parsed.Bound()
 
 		if err != nil {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusInternalServerError)
 			return
 		}
 
-		min_x := bbox.MinX()
-		min_y := bbox.MinY()
-		max_x := bbox.MaxX()
-		max_y := bbox.MaxY()
+		min_x := bbox.Left()
+		min_y := bbox.Bottom()
+		max_x := bbox.Right()
+		max_y := bbox.Top()
 
 		sw := GeoJSONCoordinate{min_x, min_y}
 		nw := GeoJSONCoordinate{min_x, max_y}

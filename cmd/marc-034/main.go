@@ -32,7 +32,7 @@ func main() {
 		log.Println(c)
 	*/
 
-	bbox, err := p.BoundingBox()
+	bbox, err := p.Bound()
 
 	if err != nil {
 		log.Fatal(err)

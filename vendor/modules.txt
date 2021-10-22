@@ -26,6 +26,9 @@ github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
+# github.com/paulmach/orb v0.3.0
+## explicit
+github.com/paulmach/orb
 # github.com/sfomuseum/go-flags v0.8.2
 ## explicit
 github.com/sfomuseum/go-flags/flagset
@@ -36,7 +39,6 @@ github.com/whosonfirst/algnhsa
 github.com/whosonfirst/go-sanitize
 # github.com/whosonfirst/go-whosonfirst-bbox v0.0.0-20170913151722-e1a4abe43723
 ## explicit
-github.com/whosonfirst/go-whosonfirst-bbox
 # golang.org/x/net v0.0.0-20210525063256-abc453219eb5
 golang.org/x/net/html
 golang.org/x/net/html/atom

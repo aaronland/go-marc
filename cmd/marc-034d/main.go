@@ -18,7 +18,7 @@ import (
 func main() {
 
 	fs := flagset.NewFlagSet("marc-034")
-	
+
 	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
 	nextzen_api_key := fs.String("nextzen-api-key", "mapzen-xxxxxx", "A valid Nextzen API key")
@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to assign flags from environment variables, %v", err)
 	}
-	
+
 	ctx := context.Background()
 
 	t := template.New("marc")
