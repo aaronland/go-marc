@@ -114,6 +114,7 @@ github.com/sfomuseum/go-edtf v0.2.2/go.mod h1:1rP0EJZ/84j3HO80vGcnG2T9MFBDAFyTNt
 github.com/sfomuseum/go-edtf v0.2.3/go.mod h1:1rP0EJZ/84j3HO80vGcnG2T9MFBDAFyTNtjrr8cv3T4=
 github.com/sfomuseum/go-flags v0.7.0/go.mod h1:ML3DTNbF9xnjExSdS/9FtVLjIUhRU5gm/ehzISv+t2w=
 github.com/sfomuseum/go-flags v0.8.1/go.mod h1:ML3DTNbF9xnjExSdS/9FtVLjIUhRU5gm/ehzISv+t2w=
+github.com/sfomuseum/go-flags v0.8.2 h1:elSU3KWMo442d1YjXu5Y/bokxvkGV+OrgAHshHZaeIo=
 github.com/sfomuseum/go-flags v0.8.2/go.mod h1:ML3DTNbF9xnjExSdS/9FtVLjIUhRU5gm/ehzISv+t2w=
 github.com/sfomuseum/go-geojson-geotag v0.0.4/go.mod h1:KC3HmXH9Aws5v5iPzCukiNGUlLfHITZAqFVLqvi2COg=
 github.com/sfomuseum/go-http-leaflet-geotag v1.1.0/go.mod h1:A8HoBbj7lnU2MItW5vEIT+fdObmpLoGUNeE3Er7vePg=

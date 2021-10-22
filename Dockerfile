@@ -1,22 +1,16 @@
-# https://blog.docker.com/2016/09/docker-golang/
-# https://blog.golang.org/docker
+FROM golang:1.17-alpine as builder
 
-# docker build -t 034d .
-# docker run -it -p 8080:8080 034d
-
-FROM golang:alpine AS build-env
-
-RUN apk add --update alpine-sdk
+RUN apk update && apk upgrade
 
 ADD . /go-marc
 
-RUN cd /go-marc; make bin
+RUN cd /go-marc && go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
 
 FROM alpine
 
-COPY --from=build-env /go-marc/bin/marc-034d /marc-034d
+COPY --from=builder /go-marc/bin/marc-034d /usr/local/bin/marc-034d
 
-EXPOSE 8080
+RUN apk update && apk upgrade \
+    && apk add ca-certificates
 
-CMD /marc-034d -host 0.0.0.0 -mapzen-api-key ${MAPZEN_APIKEY}
-
+ENTRYPOINT ["/usr/local/bin/marc-034d"]

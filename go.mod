@@ -9,6 +9,7 @@ require (
 	github.com/aaronland/go-http-server v0.0.7
 	github.com/aaronland/go-http-tangramjs v0.1.1
 	github.com/elazarl/go-bindata-assetfs v1.0.1 // indirect
+	github.com/sfomuseum/go-flags v0.8.2
 	github.com/sfomuseum/go-www-geotag v0.1.7 // indirect
 	github.com/thisisaaronland/go-marc v0.0.0-20180114181701-88cbeb264263
 	github.com/whosonfirst/go-http-mapzenjs v0.0.0-20190722193037-4ed59e932ab4 // indirect

@@ -2,14 +2,13 @@ package main
 
 import (
 	"context"
-	"flag"
-	_ "fmt"
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/aaronland/go-http-ping/v2"
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/aaronland/go-marc/http"
 	"github.com/aaronland/go-marc/templates/html"
+	"github.com/sfomuseum/go-flags/flagset"
 	"html/template"
 	"log"
 	gohttp "net/http"
@@ -18,18 +17,26 @@ import (
 
 func main() {
 
-	server_uri := flag.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
+	fs := flagset.NewFlagSet("marc-034")
+	
+	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
-	nextzen_api_key := flag.String("nextzen-api-key", "mapzen-xxxxxx", "A valid Nextzen API key")
-	nextzen_style_url := flag.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
+	nextzen_api_key := fs.String("nextzen-api-key", "mapzen-xxxxxx", "A valid Nextzen API key")
+	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
-	flag.Parse()
+	flagset.Parse(fs)
 
+	err := flagset.SetFlagsFromEnvVars(fs, "MARC")
+
+	if err != nil {
+		log.Fatalf("Failed to assign flags from environment variables, %v", err)
+	}
+	
 	ctx := context.Background()
 
 	t := template.New("marc")
 
-	t, err := t.ParseFS(html.FS, "*.html")
+	t, err = t.ParseFS(html.FS, "*.html")
 
 	if err != nil {
 		log.Fatalf("Failed to parse templates, %v", err)

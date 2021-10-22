@@ -69,13 +69,15 @@ window.addEventListener("load", function load(event){
 	var bboxes = document.getElementById("bboxes");
 	bboxes.innerHTML = "";
 
+	/*
 	if (map){
 	    var sw = [ -55, -180 ];
 	    var ne = [ 55, 180 ];
 	    var bounds = [ sw, ne ];
-	    
+
 	    map.fitBounds(bounds);
 	}
+	*/
 	
 	var on_success = function(rsp){
 
@@ -93,7 +95,7 @@ window.addEventListener("load", function load(event){
 	    var miny = bbox[1].toFixed(6);
 	    var maxx = bbox[2].toFixed(6);
 	    var maxy = bbox[3].toFixed(6);
-	    
+
 	    var coords = {
 		"S, W, N, E": [ miny, minx, maxy, maxx ],
 		"W, S, E, N": [ minx, miny, maxx, maxy ],
@@ -121,12 +123,14 @@ window.addEventListener("load", function load(event){
 	    bboxes.appendChild(ul);
 
 	    if (map){
+		
 		var sw = [ miny, minx ];
 		var ne = [ maxy, maxx ];
-		
+
 		var bounds = [ sw, ne ];
-		var opts = { padding: [50, 50] };
-		
+		var opts = { padding: [20, 20] };
+
+		console.log("FIT BOUNDS", bounds)
 		map.fitBounds(bounds, opts);
 		
 		var layer = L.geoJSON(rsp);
@@ -150,7 +154,7 @@ window.addEventListener("load", function load(event){
 	    on_success(data);
 	};
 
-	console.log("FETCH", url);
+	// console.log("FETCH", url);
 
 	req.open("get", url, true);
 	req.send();
