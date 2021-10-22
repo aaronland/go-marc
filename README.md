@@ -142,7 +142,7 @@ $> docker run -it -p 8080:8080 marc-034d -server-uri http://0.0.0.0:8080 -nextze
 ## See also
 
 * https://www.loc.gov/marc/bibliographic/bd034.html
-* https://github.com/whosonfirst/go-http-tangramjs
-* https://github.com/whosonfirst/go-http-bootstrap
-* https://github.com/whosonfirst/go-http-server
+* https://github.com/aaronland/go-http-tangramjs
+* https://github.com/aaronland/go-http-bootstrap
+* https://github.com/aaronland/go-http-server
 * https://developers.nextzen.org/
