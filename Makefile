@@ -1,3 +1,6 @@
+debug:
+	go run -mod vendor cmd/marc-034d/main.go -nextzen-api-key $(APIKEY)
+
 docker-build:
 	@make build
 	docker build -t marc-034d .

@@ -1,3 +1,4 @@
+{{ define "marc_034" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,26 +10,39 @@
 	  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	  <meta name="HandheldFriendly" content="true" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-
-	  <!-- we rely on the mapzenjs.MapzenJSHandler to squirt in the relevant JS/CSS here -->
-											      
 	  <link rel="stylesheet" type="text/css" href="/css/marc-034.css" />
 	  <script type="text/javascript" src="/javascript/marc-034.js"></script>
   </head>
   <body>
 
-    <div id="marc" class="row">
-    <form>
-      <input type="text" name="marc-034" id="marc-034" placeholder="Enter a MARC 034 value here" value="" size="64" />
-      <button id="submit" type="submit">convert to bounding box</button>
-    </form>
-    </div>
+      <nav class="navbar navbar-expand-lg">
+	  <div class="container-fluid">
+	      <a class="navbar-brand" href="#">MARC 034 to Bounding Box Convert</a>
+	      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+	      </button>
+	      <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content:right;">
+	      </div>
+	  </div>
+      </nav>
+      
+      <div class="container">
 
-    <div id="results">
-    <div id="bboxes" class="row"></div>
-    <div id="map" class="row panel"></div>
-    <div id="raw" class="row panel"></div>
-    </div>
-
+	  <form class="form-inline">
+	      <div class="form-group mb-2">
+		  <label for="marc-34">Enter a MARC 034 value to convert in to a bounding box</label>
+		  <input class="form-control" type="search" placeholder="" id="marc-034" aria-label="Convert" />
+	      </div>
+	      <button class="btn btn-primary mb-2" type="submit" id="submit">Convert</button>
+	  </form>
+	  
+	  <div class="grid-view">
+	      <div class="grid-view-item"><div id="map"></div></div>
+	      <div class="grid-view-item" id="raw"></div>
+	  </div>
+	  
+	  <div id="bboxes" class="row"></div>	  
+      </div>
   </body>
 </html>
+{{ end }}

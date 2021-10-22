@@ -8,41 +8,41 @@ code {
      color: brown;
 }
 
-input[type=text] {
-		 padding: .3em;
+nav {
+	margin-bottom: 1rem;
 }
 
-/*
-button[type=submit] {
-        border: solid thin;
-	padding: .4em;
-}
-*/
-
-.row {
-     margin-left:3%;
-     margin-right:3%;
-     margin-top:1%;
-     margin-bottom: 1%;
+nav a {
+	color: #000 !important;
 }
 
-.panel {
-     width: 40%;
-     max-width: 40%;
-     min-height: 400px;
-     max-height: 400px;
-     float:left;
-     border:solid thin;
+.grid-view {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 50px 10px;
+    justify-items: center;
 }
 
-pre {
-     padding: 1em;
-     font-size:small;
-     font-family: monospace;
+.grid-view-item {
+	border: solid thin;
+	width:45vw;
+	max-width:45vw;
+	height:60vh;
+	max-height:60vh;
+	y-overflow:scroll !important;	
+}
+
+.grid-view-item pre {
+	padding: 1em;
+	font-size:small;
+	font-family: monospace;
+	max-height:60vh;
+	y-overflow:scroll !important;	
+	
 }
 
 #bboxes {
-
+	margin-left:1rem;
 }
 
 #bboxes ul {
@@ -55,35 +55,15 @@ pre {
 	margin-bottom:.35em;
 }
 
-#map {
-
-}
-
 #marc {
       margin:3%;
       margin-bottom:0px !important;
 }
 
-#raw {
-     overflow: scroll;
-     background-color:#ccc;
-}
-
-#results {
-
-}
 
 @media (min-width: 320px) and (max-width: 768px) {
 
-input[type=text] {
-		 max-width: 275px !important;
-}
-
-       .panel {
-       	min-width: 275px !important;
-	max-width: 275px !important;
-	min-height: 150px !important;
-	max-height: 150px !important;
-	float:none !important
-       }
+	.grid-view {
+		grid-template-columns:1fr;
+	}
 }

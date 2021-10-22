@@ -9,6 +9,8 @@ import (
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/aaronland/go-marc/http"
+	"github.com/aaronland/go-marc/templates/html"
+	"html/template"
 	"log"
 	gohttp "net/http"
 	"os"
@@ -25,9 +27,17 @@ func main() {
 
 	ctx := context.Background()
 
+	t := template.New("marc")
+
+	t, err := t.ParseFS(html.FS, "*.html")
+
+	if err != nil {
+		log.Fatalf("Failed to parse templates, %v", err)
+	}
+
 	mux := gohttp.NewServeMux()
 
-	err := bootstrap.AppendAssetHandlers(mux)
+	err = bootstrap.AppendAssetHandlers(mux)
 
 	if err != nil {
 		log.Fatalf("Failed to append Bootstrap asset handlers, %v", err)
@@ -39,13 +49,19 @@ func main() {
 		log.Fatalf("Failed to append Tangram asset handlers, %v", err)
 	}
 
+	err = http.AppendStaticAssetHandlers(mux)
+
+	if err != nil {
+		log.Fatalf("Failed to append static asset handlers, %v", err)
+	}
+
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.NextzenOptions.APIKey = *nextzen_api_key
 	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url
 
-	www_handler, err := http.WWWHandler()
+	www_handler, err := http.WWWHandler(t)
 
 	if err != nil {
 		log.Fatal(err)

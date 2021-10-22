@@ -9,6 +9,7 @@ github.com/aaronland/go-http-leaflet/static
 ## explicit
 github.com/aaronland/go-http-ping/v2
 # github.com/aaronland/go-http-rewrite v0.0.6
+## explicit
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-server v0.0.7
 ## explicit
@@ -19,7 +20,7 @@ github.com/aaronland/go-http-tangramjs
 github.com/aaronland/go-http-tangramjs/static
 # github.com/aaronland/go-roster v0.0.2
 github.com/aaronland/go-roster
-# github.com/aws/aws-lambda-go v1.10.0
+# github.com/aws/aws-lambda-go v1.23.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
@@ -27,9 +28,10 @@ github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
 # github.com/elazarl/go-bindata-assetfs v1.0.1
 ## explicit
+# github.com/sfomuseum/go-www-geotag v0.1.7
+## explicit
 # github.com/thisisaaronland/go-marc v0.0.0-20180114181701-88cbeb264263
 ## explicit
-github.com/thisisaaronland/go-marc/assets/html
 github.com/thisisaaronland/go-marc/fields
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa

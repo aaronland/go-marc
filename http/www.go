@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/thisisaaronland/go-marc/assets/html"
+	"fmt"
 	"html/template"
 	gohttp "net/http"
 )
@@ -9,20 +9,12 @@ import (
 type HTMLVars struct {
 }
 
-func WWWHandler() (gohttp.Handler, error) {
+func WWWHandler(t *template.Template) (gohttp.Handler, error) {
 
-	tpl, err := html.Asset("marc-034.html")
+	t = t.Lookup("marc_034")
 
-	if err != nil {
-		return nil, err
-	}
-
-	t := template.New("034")
-
-	t, err = t.Parse(string(tpl))
-
-	if err != nil {
-		return nil, err
+	if t == nil {
+		return nil, fmt.Errorf("Can't find marc_034 template")
 	}
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
