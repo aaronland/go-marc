@@ -19,7 +19,7 @@ go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
 Convert a MARC 034 string in to a (S, W, N, E) bounding box.
 
 ```
-./bin/marc-034 -h
+$> ./bin/marc-034 -h
 Usage of ./bin/marc-034:
   -f string
     	A valid MARC 034 string (default "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000")
@@ -28,7 +28,7 @@ Usage of ./bin/marc-034:
 Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and `dddmmss (degrees-minutes-seconds)` notation. For example:
 
 ```
-./bin/marc-034
+$> ./bin/marc-034
 2017/02/13 22:23:38 1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000 <-- input (MARC 034)
 2017/02/13 22:23:38 -70.000000, -180.000000 84.000000, 180.000000 <-- output (decimal WSG84)
 ```
@@ -38,8 +38,7 @@ Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and
 A web server for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON)
 
 ```
-$> ./bin/marc-034d -g
-flag provided but not defined: -g
+$> ./bin/marc-034d -h
 Usage of ./bin/marc-034d:
   -nextzen-api-key string
     	A valid Nextzen API key (default "mapzen-xxxxxx")
