@@ -115,6 +115,16 @@ $> curl -s 'http://localhost:8080/bbox?034=1%23%24aa$b22000000%24dW1800000%24eE1
 
 _Note the way the `034` parameter is URL-encoded._
 
+### Command-line flags and environment variables
+
+Command line flags can be set also be set from environment variables. Environment variables for any given command line flag should be formatted as follows:
+
+* Replace all `-` characters with `_`
+* Upper case the flag name
+* Prepend the string with `MARC_`
+
+For example the equivalent environment variable for the `nextzen-api-key` flag would be `MARC_NEXTZEN_API_KEY`.
+
 ### Nextzen and Nextzen API keys
 
 You can register for a Nextzen API key from [https://developers.nextzen.org/](https://developers.nextzen.org/).
@@ -124,8 +134,9 @@ You can register for a Nextzen API key from [https://developers.nextzen.org/](ht
 [Yes](Docker), for `marc-034d` at least.
 
 ```
-docker build -t marc-034d .
-docker run -it -p 8080:8080 -e 'MARC_NEXTZEN_APIKEY=$(MAPZEN_APIKEY)' marc-034d
+$> docker build -t marc-034d .
+
+$> docker run -it -p 8080:8080 marc-034d -server-uri http://0.0.0.0:8080 -nextzen-api-key {APIKEY} 
 ```
 
 ## See also
