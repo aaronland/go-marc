@@ -117,16 +117,6 @@ $> curl -s 'http://localhost:8080/bbox?034=1%23%24aa$b22000000%24dW1800000%24eE1
 
 _Note the way the `034` parameter is URL-encoded._
 
-### Command-line flags and environment variables
-
-Command line flags can be set also be set from environment variables. Environment variables for any given command line flag should be formatted as follows:
-
-* Replace all `-` characters with `_`
-* Upper case the flag name
-* Prepend the string with `MARC_`
-
-For example the equivalent environment variable for the `nextzen-api-key` flag would be `MARC_NEXTZEN_API_KEY`.
-
 ### Nextzen, Nextzen API keys and Nextzen "tilepacks"
 
 The default behaviour for the `marc-034d` application is to use the [TangramJS](https://github.com/tangrams/tangram) rendering engine in combination with the freely available [Nextzen vector tiles](https://nextzen.org/). Use of the Nextzen vector tiles require a valid API key which can be created at:
@@ -157,6 +147,16 @@ There are precompile databases with global tile coverage for zoom levels 1-10, 1
 * [Global tiles, zoom levels 1 through 10](https://archive.org/details/nextzen-world-2019-1-10) (1.8GB)
 * [Global tiles, zoom level 11](https://archive.org/details/nextzen-world-2019-1-10) (3.5GB)
 * [Global tiles, zoom level 12](https://archive.org/details/nextzen-world-2019-1-10) (7.9GB)
+
+### Command-line flags and environment variables
+
+Command line flags can be set also be set from environment variables. Environment variables for any given command line flag should be formatted as follows:
+
+* Replace all `-` characters with `_`
+* Upper case the flag name
+* Prepend the string with `MARC_`
+
+For example the equivalent environment variable for the `nextzen-api-key` flag would be `MARC_NEXTZEN_API_KEY`.
 
 ## Docker
 
