@@ -27,6 +27,8 @@ func main() {
 	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
 	tilepack_uri := fs.String("nextzen-tilepack-uri", "", "...")
+
+	path_tiles := fs.String("path-tiles", "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt", "...")	
 	
 	flagset.Parse(fs)
 
@@ -57,9 +59,7 @@ func main() {
 		}
 
 		tiles_handler := tiles_http.MbtilesHandler(tiles_reader)
-		mux.Handle("/tiles/", tiles_handler)
-
-		// TO DO: SET TILES PATH
+		mux.Handle(*path_tiles, tiles_handler)
 	}
 	
 	err = bootstrap.AppendAssetHandlers(mux)
@@ -85,7 +85,8 @@ func main() {
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.NextzenOptions.APIKey = *nextzen_api_key
 	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url
-
+	tangramjs_opts.NextzenOptions.TileURL = *path_tiles
+	
 	www_handler, err := http.WWWHandler(t)
 
 	if err != nil {

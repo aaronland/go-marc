@@ -16,7 +16,9 @@ var scales map[string]string
 var rings map[string]string
 var subfields map[string]string
 
+// type Scale encapsulates the type of scale used in a MARC 034 field.
 type Scale struct {
+	// Code is the 
 	Code string
 }
 
@@ -24,6 +26,7 @@ func (s *Scale) String() string {
 	return s.Code
 }
 
+// type Ring encapsulates the type of ring used in a MARC 034 field.
 type Ring struct {
 	Code string
 }
@@ -32,6 +35,7 @@ func (r *Ring) String() string {
 	return r.Code
 }
 
+// type Subfield encapsulates the different types of subfield used in a MARC 034 field.
 type Subfield struct {
 	Code  string
 	Value string
@@ -41,12 +45,17 @@ func (sf *Subfield) String() string {
 	return fmt.Sprintf("%s%s", sf.Code, sf.Value)
 }
 
+// type Parsed encapsulates the result of a MARC 034 field that has been parsed.
 type Parsed struct {
+	// The scale used in the parsed MARC 034 field.
 	Scale     *Scale
+	// The ring used in the parsed MARC 034 field.	
 	Ring      *Ring
+	// The subfields listed in the parsed MARC 034 field.		
 	Subfields map[string]*Subfield
 }
 
+// String returns p as a MARC-encoded 034 field.
 func (p *Parsed) String() string {
 
 	subfields := make([]string, 0)
@@ -60,11 +69,15 @@ func (p *Parsed) String() string {
 	return p.Scale.String() + p.Ring.String() + strings.Join(subfields, "")
 }
 
+// type Coord wraps a geographic coordinate defined in a MARC 034 field.
 type Coord struct {
+	// DD is the coordinate in decimal degrees.
 	DD         float64
+	// Hemisphere is a geographic hemisphere of the coordinate.
 	Hemisphere string
 }
 
+// NewScale return a new `Scale` instances for code.
 func NewScale(code string) (*Scale, error) {
 
 	_, ok := scales[code]
@@ -77,6 +90,7 @@ func NewScale(code string) (*Scale, error) {
 	return &scale, nil
 }
 
+// NewRing return a new `Ring` instances for code.
 func NewRing(code string) (*Ring, error) {
 
 	_, ok := rings[code]
