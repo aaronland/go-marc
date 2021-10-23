@@ -9,6 +9,8 @@ import (
 	"github.com/aaronland/go-marc/http"
 	"github.com/aaronland/go-marc/templates/html"
 	"github.com/sfomuseum/go-flags/flagset"
+	tiles_http "github.com/tilezen/go-tilepacks/http"
+	"github.com/tilezen/go-tilepacks/tilepack"
 	"html/template"
 	"log"
 	gohttp "net/http"
@@ -21,9 +23,11 @@ func main() {
 
 	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
-	nextzen_api_key := fs.String("nextzen-api-key", "mapzen-xxxxxx", "A valid Nextzen API key")
+	nextzen_api_key := fs.String("nextzen-api-key", "nextzen-xxxxxx", "A valid Nextzen API key")
 	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
+	tilepack_uri := fs.String("nextzen-tilepack-uri", "", "...")
+	
 	flagset.Parse(fs)
 
 	err := flagset.SetFlagsFromEnvVars(fs, "MARC")
@@ -44,6 +48,20 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
+	if *tilepack_uri != "" {
+
+		tiles_reader, err := tilepack.NewMbtilesReader(*tilepack_uri)
+
+		if err != nil {
+			log.Fatalf("Failed to load tilepack, %v", err)
+		}
+
+		tiles_handler := tiles_http.MbtilesHandler(tiles_reader)
+		mux.Handle("/tiles/", tiles_handler)
+
+		// TO DO: SET TILES PATH
+	}
+	
 	err = bootstrap.AppendAssetHandlers(mux)
 
 	if err != nil {
