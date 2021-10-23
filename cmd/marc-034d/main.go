@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/aaronland/go-http-ping/v2"
 	"github.com/aaronland/go-http-server"
@@ -15,6 +16,7 @@ import (
 	"log"
 	gohttp "net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -26,10 +28,10 @@ func main() {
 	nextzen_api_key := fs.String("nextzen-api-key", "nextzen-xxxxxx", "A valid Nextzen API key")
 	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
-	tilepack_uri := fs.String("nextzen-tilepack-uri", "", "...")
+	tilepack_db := fs.String("nextzen-tilepack-database", "", "The path to a valid MBTiles database (tilepack) containing Nextzen MVT tiles.")
 
-	path_tiles := fs.String("path-tiles", "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt", "...")	
-	
+	tilepack_uri := fs.String("nextzen-tilepack-uri", "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt", "The relative URI to serve Nextzen MVT tiles from a MBTiles database (tilepack).")
+
 	flagset.Parse(fs)
 
 	err := flagset.SetFlagsFromEnvVars(fs, "MARC")
@@ -50,18 +52,6 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	if *tilepack_uri != "" {
-
-		tiles_reader, err := tilepack.NewMbtilesReader(*tilepack_uri)
-
-		if err != nil {
-			log.Fatalf("Failed to load tilepack, %v", err)
-		}
-
-		tiles_handler := tiles_http.MbtilesHandler(tiles_reader)
-		mux.Handle(*path_tiles, tiles_handler)
-	}
-	
 	err = bootstrap.AppendAssetHandlers(mux)
 
 	if err != nil {
@@ -85,8 +75,11 @@ func main() {
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.NextzenOptions.APIKey = *nextzen_api_key
 	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url
-	tangramjs_opts.NextzenOptions.TileURL = *path_tiles
-	
+
+	if *tilepack_db != "" {
+		tangramjs_opts.NextzenOptions.TileURL = *tilepack_uri
+	}
+
 	www_handler, err := http.WWWHandler(t)
 
 	if err != nil {
@@ -111,6 +104,22 @@ func main() {
 	mux.Handle("/", www_handler)
 	mux.Handle("/bbox", bbox_handler)
 	mux.Handle("/ping", ping_handler)
+
+	if *tilepack_db != "" {
+
+		tiles_reader, err := tilepack.NewMbtilesReader(*tilepack_db)
+
+		if err != nil {
+			log.Fatalf("Failed to load tilepack, %v", err)
+		}
+
+		u := strings.TrimLeft(*tilepack_uri, "/")
+		p := strings.Split(u, "/")
+		path_tiles := fmt.Sprintf("/%s/", p[0])
+
+		tiles_handler := tiles_http.MbtilesHandler(tiles_reader)
+		mux.Handle(path_tiles, tiles_handler)
+	}
 
 	s, err := server.NewServer(ctx, *server_uri)
 

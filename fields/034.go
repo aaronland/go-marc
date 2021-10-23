@@ -18,7 +18,7 @@ var subfields map[string]string
 
 // type Scale encapsulates the type of scale used in a MARC 034 field.
 type Scale struct {
-	// Code is the 
+	// Code is the
 	Code string
 }
 
@@ -48,10 +48,10 @@ func (sf *Subfield) String() string {
 // type Parsed encapsulates the result of a MARC 034 field that has been parsed.
 type Parsed struct {
 	// The scale used in the parsed MARC 034 field.
-	Scale     *Scale
-	// The ring used in the parsed MARC 034 field.	
-	Ring      *Ring
-	// The subfields listed in the parsed MARC 034 field.		
+	Scale *Scale
+	// The ring used in the parsed MARC 034 field.
+	Ring *Ring
+	// The subfields listed in the parsed MARC 034 field.
 	Subfields map[string]*Subfield
 }
 
@@ -72,7 +72,7 @@ func (p *Parsed) String() string {
 // type Coord wraps a geographic coordinate defined in a MARC 034 field.
 type Coord struct {
 	// DD is the coordinate in decimal degrees.
-	DD         float64
+	DD float64
 	// Hemisphere is a geographic hemisphere of the coordinate.
 	Hemisphere string
 }

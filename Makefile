@@ -6,7 +6,7 @@ debug:
 	go run -mod vendor cmd/marc-034d/main.go -nextzen-api-key $(APIKEY)
 
 debug-tilepack:
-	go run -mod vendor cmd/marc-034d/main.go -nextzen-tilepack-uri $(TILEPACK)
+	go run -mod vendor cmd/marc-034d/main.go -nextzen-tilepack-database $(TILEPACK)
 
 docker:
 	docker build -t marc-034d .
