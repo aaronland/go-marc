@@ -124,9 +124,34 @@ Command line flags can be set also be set from environment variables. Environmen
 
 For example the equivalent environment variable for the `nextzen-api-key` flag would be `MARC_NEXTZEN_API_KEY`.
 
-### Nextzen and Nextzen API keys
+### Nextzen, Nextzen API keys and Nextzen "tilepacks"
 
-You can register for a Nextzen API key from [https://developers.nextzen.org/](https://developers.nextzen.org/).
+The default behaviour for the `marc-034d` application is to use the [TangramJS](https://github.com/tangrams/tangram) rendering engine in combination with the freely available [Nextzen vector tiles](https://nextzen.org/). Use of the Nextzen vector tiles require a valid API key which can be created at:
+
+* [https://developers.nextzen.org/](https://developers.nextzen.org/).
+
+It is also possible to configure the `marc-034d` application to use Nextzen vector tile "tilepacks" to serve tile data locally. The tilepacks are just [MBTiles](#) databases containing vector tile data compiled using the [tilezen/go-tilepacks](https://github.com/tilezen/go-tilepacks#build) package. To use a local tilepack with the `marc-034d` application pass in the path to your database with the `-nextzen-tilepack-database` flag. For example:
+
+```
+$> ./bin/marc-034d -nextzen-tilepack-database tiles/nextzen-world-2019-1-10.db 
+2021/10/23 14:27:33 listening on http://localhost:8080
+```
+
+The application won't perform any differently but if you look "under the hood" you'll see that the vector tile data is being served from the `marc-034d` application itself.
+
+![](docs/images/marc-034d-www-v2-tilepack.png)
+
+#### Notes
+
+It is currently only possible to serve tiles from a single "tilepack" database.
+
+It is not possible to dynamically limit the map to the zoom range and tile extent of a given "tilepack" database. Yet. I'm working on it.
+
+There are precompile databases with global tile coverage for zoom levels 1-10, 11 and 12 available on the Internet Archive:
+
+* [Global tiles, zoom levels 1 through 10](https://archive.org/details/nextzen-world-2019-1-10) (1.8GB)
+* [Global tiles, zoom level 11](https://archive.org/details/nextzen-world-2019-1-10) (3.5GB)
+* [Global tiles, zoom level 12](https://archive.org/details/nextzen-world-2019-1-10) (7.9GB)
 
 ## Docker
 
@@ -135,8 +160,22 @@ You can register for a Nextzen API key from [https://developers.nextzen.org/](ht
 ```
 $> docker build -t marc-034d .
 
-$> docker run -it -p 8080:8080 marc-034d -server-uri http://0.0.0.0:8080 -nextzen-api-key {APIKEY} 
+$> docker run -it -p 8080:8080 marc-034d \
+	/usr/local/bin/marc-034d \
+	-server-uri http://0.0.0.0:8080 \
+	-nextzen-api-key {APIKEY} 
 ```
+
+The Dockerfile will copy any "tilepacks" (ending in `.db`) in this package's `tiles` folder in to the container's `/usr/local/data/tiles` folder. This allows you to bundle and load local vector tile data with your container application. For example:
+
+```
+$> docker run -it -p 8080:8080 marc-034d \
+	/usr/local/bin/marc-034d \
+	-server-uri http://0.0.0.0:8080 \
+	-nextzen-tilepack-database /usr/local/data/tiles/nextzen-world-2019-1-10.db 
+```
+
+_Note that any files ending in `.db` in the `tiles` folder are explicitly excluded from any Git commits._
 
 ## See also
 

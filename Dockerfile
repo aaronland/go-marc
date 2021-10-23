@@ -1,6 +1,6 @@
 FROM golang:1.17-alpine as builder
 
-RUN apk update && apk upgrade
+RUN apk update && apk upgrade &&  apk add libc-dev gcc
 
 ADD . /go-marc
 
@@ -13,4 +13,8 @@ COPY --from=builder /go-marc/bin/marc-034d /usr/local/bin/marc-034d
 RUN apk update && apk upgrade \
     && apk add ca-certificates
 
-ENTRYPOINT ["/usr/local/bin/marc-034d"]
+RUN mkdir -p /usr/local/data/tiles
+
+COPY tiles/*.db /usr/local/data/tiles/
+
+# ENTRYPOINT ["/usr/local/bin/marc-034d"]
