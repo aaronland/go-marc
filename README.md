@@ -35,15 +35,18 @@ $> ./bin/marc-034
 
 ### marc-034d
 
-A web server for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON)
+A web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON)
 
 ```
 $> ./bin/marc-034d -h
-Usage of ./bin/marc-034d:
   -nextzen-api-key string
-    	A valid Nextzen API key (default "mapzen-xxxxxx")
+    	A valid Nextzen API key (default "nextzen-xxxxxx")
   -nextzen-style-url string
     	A valid Nextzen style URL (default "/tangram/refill-style.zip")
+  -nextzen-tilepack-database string
+    	The path to a valid MBTiles database (tilepack) containing Nextzen MVT tiles.
+  -nextzen-tilepack-uri string
+    	The relative URI to serve Nextzen MVT tiles from a MBTiles database (tilepack). (default "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt")
   -server-uri string
     	A valid aaronland/go-http-server URI (default "http://localhost:8080")
 ```
