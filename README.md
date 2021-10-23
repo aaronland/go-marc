@@ -130,7 +130,9 @@ The default behaviour for the `marc-034d` application is to use the [TangramJS](
 
 * [https://developers.nextzen.org/](https://developers.nextzen.org/).
 
-It is also possible to configure the `marc-034d` application to use Nextzen vector tile "tilepacks" to serve tile data locally. The tilepacks are just [MBTiles](#) databases containing vector tile data compiled using the [tilezen/go-tilepacks](https://github.com/tilezen/go-tilepacks#build) package. To use a local tilepack with the `marc-034d` application pass in the path to your database with the `-nextzen-tilepack-database` flag. For example:
+It is also possible to configure the `marc-034d` application to use Nextzen vector tile "tilepacks" to serve tile data locally. The tilepacks are just [MBTiles](#) databases containing vector tile data compiled using the [tilezen/go-tilepacks](https://github.com/tilezen/go-tilepacks#build) package.
+
+To use a local tilepack with the `marc-034d` application pass in the path to your database with the `-nextzen-tilepack-database` flag. For example:
 
 ```
 $> ./bin/marc-034d -nextzen-tilepack-database tiles/nextzen-world-2019-1-10.db 
