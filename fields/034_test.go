@@ -47,5 +47,31 @@ func TestParse034(t *testing.T) {
 }
 
 func TestParse034Coordinate(t *testing.T) {
-	t.Skip()
+
+	tests := map[string]string{
+		"W0825500 W": "-82.91666666666667 W",
+		"W0822000 E": "-82.33333333333333 W",
+		"N0273000 N": "27.5 N",
+		"N0265000 S": "26.833333333333332 N",
+	}
+
+	for raw, expected := range tests {
+
+		parts := strings.Split(raw, " ")
+		coord := parts[0]
+		hemisphere := parts[1]
+
+		c, err := Parse034Coordinate(coord, hemisphere)
+
+		if err != nil {
+			t.Fatalf("Failed to parse '%s' (%s), %v", coord, hemisphere, err)
+		}
+
+		str_c := c.String()
+
+		if str_c != expected {
+			t.Fatalf("Unexpected stringification for '%s' (%s), got '%s' but expected '%s'", coord, hemisphere, str_c, expected)
+		}
+	}
+
 }

@@ -124,6 +124,11 @@ type Coord struct {
 	Hemisphere string
 }
 
+func (c *Coord) String() string {
+	str_dd := strconv.FormatFloat(c.DD, 'f', -1, 64)
+	return fmt.Sprintf("%s %s", str_dd, c.Hemisphere)
+}
+
 // NewScale return a new `Scale` instance for code.
 func NewScale(code string) (*Scale, error) {
 
@@ -286,7 +291,7 @@ func (p *Parsed) Bound() (*orb.Bound, error) {
 // Parse034Coordinate parses an individual coordinate string from a MARC 034 field.
 func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {
 
-	// log.Println("PARSE COORD ", raw)
+	// fmt.Println("PARSE COORD ", raw, hemisphere)
 
 	// hdddmmss (hemisphere-degrees-minutes-seconds)
 	// hddd.dddddd (hemisphere-degrees.decimal degrees)

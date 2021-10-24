@@ -52,10 +52,12 @@ func StaticAssetsHandlerWithPrefix(prefix string) (gohttp.Handler, error) {
 	return rewrite_handler, nil
 }
 
+// AppendStaticAssetHandlers will append paths for all the files in `StaticAssetsHandler()` to mux.
 func AppendStaticAssetHandlers(mux *gohttp.ServeMux) error {
 	return AppendStaticAssetHandlersWithPrefix(mux, "")
 }
 
+// AppendStaticAssetHandlersWithPrefix will append paths for all the files in `StaticAssetsHandlerWithPrefix()` to mux prepended with prefix.
 func AppendStaticAssetHandlersWithPrefix(mux *gohttp.ServeMux, prefix string) error {
 
 	asset_handler, err := StaticAssetsHandlerWithPrefix(prefix)
