@@ -17,7 +17,7 @@ github.com/aaronland/go-http-sanitize
 # github.com/aaronland/go-http-server v0.0.7
 ## explicit
 github.com/aaronland/go-http-server
-# github.com/aaronland/go-http-tangramjs v0.1.1
+# github.com/aaronland/go-http-tangramjs v0.1.2
 ## explicit
 github.com/aaronland/go-http-tangramjs
 github.com/aaronland/go-http-tangramjs/static
@@ -104,7 +104,6 @@ github.com/tilezen/go-tilepacks/tilepack
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
 # github.com/whosonfirst/go-sanitize v0.1.0
-## explicit
 github.com/whosonfirst/go-sanitize
 # golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 golang.org/x/net/html
