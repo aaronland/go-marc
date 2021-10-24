@@ -9,7 +9,8 @@ import (
 type HTMLVars struct {
 }
 
-func WWWHandler(t *template.Template) (gohttp.Handler, error) {
+// MARC034Handler returns a `net/http.Handler` instance for converting MARC 034 fields.
+func MARC034Handler(t *template.Template) (gohttp.Handler, error) {
 
 	t = t.Lookup("marc_034")
 

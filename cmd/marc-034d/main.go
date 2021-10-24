@@ -1,3 +1,4 @@
+// marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).
 package main
 
 import (
@@ -25,12 +26,18 @@ func main() {
 
 	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
-	nextzen_api_key := fs.String("nextzen-api-key", "nextzen-xxxxxx", "A valid Nextzen API key")
+	nextzen_api_key := fs.String("nextzen-api-key", "xxxxxx", "A valid Nextzen API key")
 	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
 
 	tilepack_db := fs.String("nextzen-tilepack-database", "", "The path to a valid MBTiles database (tilepack) containing Nextzen MVT tiles.")
 
 	tilepack_uri := fs.String("nextzen-tilepack-uri", "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt", "The relative URI to serve Nextzen MVT tiles from a MBTiles database (tilepack).")
+
+	fs.Usage = func() {
+		fmt.Fprintf(os.Stderr, "marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s [options]\n", os.Args[0])
+		fs.PrintDefaults()
+	}
 
 	flagset.Parse(fs)
 
@@ -80,10 +87,10 @@ func main() {
 		tangramjs_opts.NextzenOptions.TileURL = *tilepack_uri
 	}
 
-	www_handler, err := http.WWWHandler(t)
+	www_handler, err := http.MARC034Handler(t)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create MARC034 handler, %v", err)
 	}
 
 	www_handler = tangramjs.AppendResourcesHandler(www_handler, tangramjs_opts)
@@ -98,7 +105,7 @@ func main() {
 	ping_handler, err := ping.PingPongHandler()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create ping handler, %v", err)
 	}
 
 	mux.Handle("/", www_handler)

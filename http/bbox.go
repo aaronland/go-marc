@@ -38,6 +38,7 @@ type BboxResponse struct {
 	MaxY float64 `json:"max_y"`
 }
 
+// BboxHandler returns a `net/http.Handler` instance for convert MARC 034 fields in to GeoJSON Features.
 func BboxHandler() (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {

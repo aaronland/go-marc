@@ -6,6 +6,10 @@ Go package for working with MARC records.
 
 Not all of MARC. Probably not ever. Just the `034` field so far. If you are looking for a general-purpose library for working with MARC records I'd recommend looking at [miku/marc21](https://github.com/miku/marc21).
 
+## Documentation
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/aaronland/go-marc.svg)](https://pkg.go.dev/github.com/aaronland/go-marc)
+
 ## Tools
 
 ```
@@ -16,21 +20,20 @@ go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
 
 ### marc-034
 
-Convert a MARC 034 string in to a (S, W, N, E) bounding box.
+Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.
 
 ```
 $> ./bin/marc-034 -h
-Usage of ./bin/marc-034:
-  -f string
-    	A valid MARC 034 string (default "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000")
+Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.
+Usage:
+	 ./bin/marc-034 MARC034(N) MARC034(N)
 ```
 
 Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and `dddmmss (degrees-minutes-seconds)` notation. For example:
 
 ```
-$> ./bin/marc-034
-2017/02/13 22:23:38 1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000 <-- input (MARC 034)
-2017/02/13 22:23:38 -70.000000, -180.000000 84.000000, 180.000000 <-- output (decimal WSG84)
+$> ./bin/marc-034 '1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000'
+-70,-180,84,180
 ```
 
 ### marc-034d
@@ -39,8 +42,11 @@ A web application for converting MARC 034 strings in to bounding boxes (formatte
 
 ```
 $> ./bin/marc-034d -h
+marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).
+Usage:
+	 ./bin/marc-034d [options]
   -nextzen-api-key string
-    	A valid Nextzen API key (default "nextzen-xxxxxx")
+    	A valid Nextzen API key (default "xxxxxx")
   -nextzen-style-url string
     	A valid Nextzen style URL (default "/tangram/refill-style.zip")
   -nextzen-tilepack-database string

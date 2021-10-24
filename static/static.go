@@ -1,3 +1,4 @@
+// package static provides an embedded filesystem for web application static assets (JavaScript, CSS).
 package static
 
 import (

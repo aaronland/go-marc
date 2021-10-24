@@ -1,43 +1,48 @@
+// marc-034 parses one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.
 package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/aaronland/go-marc/fields"
 	"log"
+	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
 
-	var f = flag.String("f", "1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000", "A valid MARC 034 string")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s MARC034(N) MARC034(N)\n", os.Args[0])
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
 
-	log.Println(*f)
+	for _, raw := range flag.Args() {
 
-	p, err := fields.Parse034(*f)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// log.Println(p)
-
-	/*
-		c, err := fields.Parse034Coordinate(p.Subfields["$d"].Value)
+		p, err := fields.Parse034(raw)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to parse '%s', %v", raw, err)
 		}
 
-		log.Println(c)
-	*/
+		b, err := p.Bound()
 
-	bbox, err := p.Bound()
+		if err != nil {
+			log.Fatalf("Failed to derive bounds for '%s', %v", raw, err)
+		}
 
-	if err != nil {
-		log.Fatal(err)
+		bbox := []string{
+			strconv.FormatFloat(b.Bottom(), 'f', -1, 64),
+			strconv.FormatFloat(b.Left(), 'f', -1, 64),
+			strconv.FormatFloat(b.Top(), 'f', -1, 64),
+			strconv.FormatFloat(b.Right(), 'f', -1, 64),
+		}
+
+		str_bbox := strings.Join(bbox, ",")
+		fmt.Println(str_bbox)
 	}
-
-	log.Println(bbox)
-
 }

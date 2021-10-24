@@ -10,11 +10,13 @@ import (
 	"strings"
 )
 
+// StaticFileSystem returns a `net/http.FileSystem` instance for the static asset filesystem in `go-marc/static`.
 func StaticFileSystem() (gohttp.FileSystem, error) {
 	http_fs := gohttp.FS(static.FS)
 	return http_fs, nil
 }
 
+// StaticAssetsHandler returns a `net/http.Handle` instance for serving files in StaticFileSystem.
 func StaticAssetsHandler() (gohttp.Handler, error) {
 
 	http_fs, err := StaticFileSystem()
@@ -26,6 +28,7 @@ func StaticAssetsHandler() (gohttp.Handler, error) {
 	return gohttp.FileServer(http_fs), nil
 }
 
+// StaticAssetsHandlerWithPrefix returns a `net/http.Handle` instance for serving files in StaticFileSystem from prefix.
 func StaticAssetsHandlerWithPrefix(prefix string) (gohttp.Handler, error) {
 
 	fs_handler, err := StaticAssetsHandler()

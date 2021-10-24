@@ -6,114 +6,12 @@ import (
 	"github.com/paulmach/orb"
 	_ "log"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 // https://www.loc.gov/marc/bibliographic/bd034.html
-
-var scales map[string]string
-var rings map[string]string
-var subfields map[string]string
-
-// type Scale encapsulates the type of scale used in a MARC 034 field.
-type Scale struct {
-	// Code is the
-	Code string
-}
-
-func (s *Scale) String() string {
-	return s.Code
-}
-
-// type Ring encapsulates the type of ring used in a MARC 034 field.
-type Ring struct {
-	Code string
-}
-
-func (r *Ring) String() string {
-	return r.Code
-}
-
-// type Subfield encapsulates the different types of subfield used in a MARC 034 field.
-type Subfield struct {
-	Code  string
-	Value string
-}
-
-func (sf *Subfield) String() string {
-	return fmt.Sprintf("%s%s", sf.Code, sf.Value)
-}
-
-// type Parsed encapsulates the result of a MARC 034 field that has been parsed.
-type Parsed struct {
-	// The scale used in the parsed MARC 034 field.
-	Scale *Scale
-	// The ring used in the parsed MARC 034 field.
-	Ring *Ring
-	// The subfields listed in the parsed MARC 034 field.
-	Subfields map[string]*Subfield
-}
-
-// String returns p as a MARC-encoded 034 field.
-func (p *Parsed) String() string {
-
-	subfields := make([]string, 0)
-
-	// sudo do this alphabetically...
-
-	for _, s := range p.Subfields {
-		subfields = append(subfields, s.String())
-	}
-
-	return p.Scale.String() + p.Ring.String() + strings.Join(subfields, "")
-}
-
-// type Coord wraps a geographic coordinate defined in a MARC 034 field.
-type Coord struct {
-	// DD is the coordinate in decimal degrees.
-	DD float64
-	// Hemisphere is a geographic hemisphere of the coordinate.
-	Hemisphere string
-}
-
-// NewScale return a new `Scale` instances for code.
-func NewScale(code string) (*Scale, error) {
-
-	_, ok := scales[code]
-
-	if !ok {
-		return nil, errors.New("Invalid scale code")
-	}
-
-	scale := Scale{Code: code}
-	return &scale, nil
-}
-
-// NewRing return a new `Ring` instances for code.
-func NewRing(code string) (*Ring, error) {
-
-	_, ok := rings[code]
-
-	if !ok {
-		return nil, errors.New("Invalid ring code")
-	}
-
-	ring := Ring{Code: code}
-	return &ring, nil
-}
-
-func NewSubfield(code string, value string) (*Subfield, error) {
-
-	_, ok := subfields[code]
-
-	if !ok {
-		return nil, errors.New("Invalid subfield code")
-	}
-
-	sub := Subfield{Code: code, Value: value}
-	return &sub, nil
-}
 
 func init() {
 
@@ -158,6 +56,114 @@ func init() {
 
 }
 
+var scales map[string]string
+var rings map[string]string
+var subfields map[string]string
+
+// type Scale encapsulates the type of scale used in a MARC 034 field.
+type Scale struct {
+	// Code is the
+	Code string
+}
+
+// String returns the code value for s.
+func (s *Scale) String() string {
+	return s.Code
+}
+
+// type Ring encapsulates the type of ring used in a MARC 034 field.
+type Ring struct {
+	Code string
+}
+
+// String returns the code value for r.
+func (r *Ring) String() string {
+	return r.Code
+}
+
+// type Subfield encapsulates the different types of subfield used in a MARC 034 field.
+type Subfield struct {
+	Code  string
+	Value string
+}
+
+// String returns the subfield (code and value) value for sf.
+func (sf *Subfield) String() string {
+	return fmt.Sprintf("%s%s", sf.Code, sf.Value)
+}
+
+// type Parsed encapsulates the result of a MARC 034 field that has been parsed.
+type Parsed struct {
+	// The scale used in the parsed MARC 034 field.
+	Scale *Scale
+	// The ring used in the parsed MARC 034 field.
+	Ring *Ring
+	// The subfields listed in the parsed MARC 034 field.
+	Subfields map[string]*Subfield
+}
+
+// String returns p as a MARC-encoded 034 field.
+func (p *Parsed) String() string {
+
+	subfields := make([]string, 0)
+
+	for _, s := range p.Subfields {
+		subfields = append(subfields, s.String())
+	}
+
+	sort.Strings(subfields)
+
+	return p.Scale.String() + p.Ring.String() + strings.Join(subfields, "")
+}
+
+// type Coord wraps a geographic coordinate defined in a MARC 034 field.
+type Coord struct {
+	// DD is the coordinate in decimal degrees.
+	DD float64
+	// Hemisphere is a geographic hemisphere of the coordinate.
+	Hemisphere string
+}
+
+// NewScale return a new `Scale` instance for code.
+func NewScale(code string) (*Scale, error) {
+
+	_, ok := scales[code]
+
+	if !ok {
+		return nil, errors.New("Invalid scale code")
+	}
+
+	scale := Scale{Code: code}
+	return &scale, nil
+}
+
+// NewRing return a new `Ring` instance for code.
+func NewRing(code string) (*Ring, error) {
+
+	_, ok := rings[code]
+
+	if !ok {
+		return nil, errors.New("Invalid ring code")
+	}
+
+	ring := Ring{Code: code}
+	return &ring, nil
+}
+
+// NewSubfield returns a new `Subfield` instance for code and value.
+func NewSubfield(code string, value string) (*Subfield, error) {
+
+	_, ok := subfields[code]
+
+	if !ok {
+		return nil, errors.New("Invalid subfield code")
+	}
+
+	sub := Subfield{Code: code, Value: value}
+	return &sub, nil
+}
+
+// Parse034 parses a MARC 034 field as defined by https://www.loc.gov/marc/bibliographic/bd034.html in to a `Parsed` instance.
 func Parse034(raw string) (*Parsed, error) {
 
 	chars := strings.Split(raw, "")
@@ -234,6 +240,7 @@ func Parse034(raw string) (*Parsed, error) {
 	return &p, nil
 }
 
+// Bound returns an `orb.Bound` instance (a bounding box) for a parsed MARC 034 field.
 func (p *Parsed) Bound() (*orb.Bound, error) {
 
 	coord_w, err := Parse034Coordinate(p.Subfields["$d"].Value, "W")
@@ -276,6 +283,7 @@ func (p *Parsed) Bound() (*orb.Bound, error) {
 	return b, nil
 }
 
+// Parse034Coordinate parses an individual coordinate string from a MARC 034 field.
 func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {
 
 	// log.Println("PARSE COORD ", raw)
@@ -370,6 +378,7 @@ func Parse034Coordinate(raw string, hemisphere string) (*Coord, error) {
 	return nil, errors.New("Unsupported (or invalid) coordinate string")
 }
 
+// dms2dd converts a degrees-minutes-seconds coordinate string to a decimal degrees coordinate.
 func dms2dd(deg string, min string, sec string) (float64, error) {
 
 	deg_fl, err := strconv.ParseFloat(deg, 64)
