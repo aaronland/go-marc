@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 	_ "log"
 	"regexp"
 	"sort"
@@ -286,6 +287,23 @@ func (p *Parsed) Bound() (*orb.Bound, error) {
 	}
 
 	return b, nil
+}
+
+// Bound returns an `geojson.Feature` instance (a bounding box) for a parsed MARC 034 field.
+func (p *Parsed) AsGeoJSON() (*geojson.Feature, error) {
+
+	b, err := p.Bound()
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to derive bounds, %w", err)
+	}
+
+	poly := b.ToPolygon()
+
+	f := geojson.NewFeature(poly)
+	f.Properties["marc:034"] = p.String()
+
+	return f, nil
 }
 
 // Parse034Coordinate parses an individual coordinate string from a MARC 034 field.

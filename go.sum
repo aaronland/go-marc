@@ -9,6 +9,8 @@ github.com/aaronland/go-http-rewrite v0.0.6 h1:IGmNgC+VIkOPw9h9kdhqZT48oaUbeaRgG
 github.com/aaronland/go-http-rewrite v0.0.6/go.mod h1:+Ehclg6SIiQPEJlSv3LR+8rojSSYPLGQuDf2z9bChpY=
 github.com/aaronland/go-http-rewrite v0.0.7 h1:CBE5vYfI5bqp7ksMmgFIn0dGF5EcVZgiUlGOeg0xAws=
 github.com/aaronland/go-http-rewrite v0.0.7/go.mod h1:uK56Yz/ZezCbIepPhSWv0wji4ykabrcbp+of+YMDLiM=
+github.com/aaronland/go-http-sanitize v0.0.6 h1:tlyIm16zOFrn+PfJlBCmTgFV9URwCho2/YlB9iAj8Eg=
+github.com/aaronland/go-http-sanitize v0.0.6/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
 github.com/aaronland/go-http-server v0.0.7 h1:hKY2e/WLkUhaeEx4KZW2iRcBfsSZqAV/wfLLRQcrECM=
 github.com/aaronland/go-http-server v0.0.7/go.mod h1:6dtsZDrQG0XvUOCL0eaHsUw+7gw3Xa/Nm+XofvkSw2w=
 github.com/aaronland/go-http-tangramjs v0.1.1 h1:iMFoAWaI2ALfHDNDE6VKynhvX2Cny+SE8wujOhBtG9s=
