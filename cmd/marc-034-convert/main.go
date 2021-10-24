@@ -1,4 +1,4 @@
-//
+// marc-034-convert is a command line tool to process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
 package main
 
 import (
@@ -21,8 +21,8 @@ func main() {
 	maxx_column := flag.String("max-x-column", "max_x", "The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored.")
 	maxy_column := flag.String("max-y-column", "max_y", "The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored.")
 
-	output := flag.String("output", "", "The path where your new CSV file should be created.")
-	stdout := flag.Bool("to-stdout", false, "Output CSV data to STDOUT.")
+	to_file := flag.String("to-file", "", "The path where your new CSV file should be created.")
+	to_stdout := flag.Bool("to-stdout", false, "Output CSV data to STDOUT.")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.\n")
@@ -34,12 +34,12 @@ func main() {
 
 	writers := make([]io.Writer, 0)
 
-	if *output != "" {
+	if *to_file != "" {
 
-		fh, err := os.OpenFile(*output, os.O_RDWR|os.O_CREATE, 0644)
+		fh, err := os.OpenFile(*to_file, os.O_RDWR|os.O_CREATE, 0644)
 
 		if err != nil {
-			log.Fatalf("Failed to open %s for writing, %v", *output, err)
+			log.Fatalf("Failed to open %s for writing, %v", *to_file, err)
 		}
 
 		defer fh.Close()
@@ -47,7 +47,7 @@ func main() {
 		writers = append(writers, fh)
 	}
 
-	if *stdout {
+	if *to_stdout {
 		writers = append(writers, os.Stdout)
 	}
 

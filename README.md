@@ -54,10 +54,28 @@ Usage:
     	The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored. (default "min_x")
   -min-y-column string
     	The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored. (default "min_y")
-  -output string
+  -to-file string
     	The path where your new CSV file should be created.
   -to-stdout
     	Output CSV data to STDOUT.
+```
+
+For example, given in an input CSV file that looks this:
+
+```
+$> cat test.csv
+id,marc_034,name
+123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,example
+456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,another example
+```
+
+Passing it to the `marc-034-convert` tool would yield:
+
+```
+$> ./bin/marc-034-convert -to-stdout ./test.csv
+id,marc_034,max_x,max_y,min_x,min_y,name
+123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example
+456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example
 ```
 
 ### marc-034d
