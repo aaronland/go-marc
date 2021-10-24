@@ -125,13 +125,13 @@ _Note the way the `034` parameter is URL-encoded._
 
 ### Nextzen, Nextzen API keys and Nextzen "tilepacks"
 
-The default behaviour for the `marc-034d` application is to use the [TangramJS](https://github.com/tangrams/tangram) rendering engine in combination with the freely available [Nextzen vector tiles](https://nextzen.org/). Use of the Nextzen vector tiles require a valid API key which can be created at:
+The default behaviour for the `marc-034d` application is to use the [TangramJS](https://github.com/tangrams/tangram) rendering engine in combination with the freely available [Nextzen vector tiles](https://nextzen.org/). Use of the Nextzen vector tiles requires a valid API key which can be created at:
 
 * [https://developers.nextzen.org/](https://developers.nextzen.org/).
 
-It is also possible to configure the `marc-034d` application to use Nextzen vector tile "tilepacks" to serve tile data locally. The tilepacks are just [MBTiles](#) databases containing vector tile data compiled using the [tilezen/go-tilepacks](https://github.com/tilezen/go-tilepacks#build) package.
+It is also possible to configure the `marc-034d` application to use Nextzen vector tile "tilepacks" to serve tile data locally. The tilepacks are just [MBTiles](https://github.com/mapbox/mbtiles-spec) databases containing vector tile data compiled using the [tilezen/go-tilepacks](https://github.com/tilezen/go-tilepacks#build) package.
 
-To use a local tilepack with the `marc-034d` application pass in the path to your database with the `-nextzen-tilepack-database` flag. For example:
+To use a local tilepack with the `marc-034d` application pass the path to your database to the `-nextzen-tilepack-database` flag. For example:
 
 ```
 $> ./bin/marc-034d -nextzen-tilepack-database tiles/nextzen-world-2019-1-10.db 
@@ -148,7 +148,7 @@ It is currently only possible to serve tiles from a single "tilepack" database.
 
 It is not possible to dynamically limit the map to the zoom range and tile extent of a given "tilepack" database. Yet. I'm working on it.
 
-There are precompile databases with global tile coverage for zoom levels 1-10, 11 and 12 available on the Internet Archive:
+There are precompiled databases with global tile coverage for zoom levels 1-10, 11 and 12 available on the Internet Archive:
 
 * [Global tiles, zoom levels 1 through 10](https://archive.org/details/nextzen-world-2019-1-10) (1.8GB)
 * [Global tiles, zoom level 11](https://archive.org/details/nextzen-world-2019-1-10) (3.5GB)
