@@ -302,6 +302,7 @@ func (p *Parsed) AsGeoJSON() (*geojson.Feature, error) {
 
 	f := geojson.NewFeature(poly)
 	f.Properties["marc:034"] = p.String()
+	f.BBox = geojson.NewBBox(*b)
 
 	return f, nil
 }
