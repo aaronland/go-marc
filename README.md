@@ -39,6 +39,8 @@ $> ./bin/marc-034 '1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000'
 
 ### marc-034-convert
 
+Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
+
 ```
 $> ./bin/marc-034-convert -h
 Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
