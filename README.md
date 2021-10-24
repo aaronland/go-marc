@@ -16,6 +16,7 @@ Not all of MARC. Probably not ever. Just the `034` field so far. If you are look
 $> make cli
 go build -mod vendor -o bin/marc-034 cmd/marc-034/main.go
 go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
+go build -mod vendor -o bin/marc-034-convert cmd/marc-034-convert/main.go
 ```
 
 ### marc-034
@@ -34,6 +35,29 @@ Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and
 ```
 $> ./bin/marc-034 '1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000'
 -70,-180,84,180
+```
+
+### marc-034-convert
+
+```
+$> ./bin/marc-034-convert -h
+Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
+Usage:
+	 ./bin/marc-034-convert csv-file(N) csv-file(N)
+  -marc-034-column string
+    	The name of the CSV column where MARC 034 data is stored. (default "marc_034")
+  -max-x-column string
+    	The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored. (default "max_x")
+  -max-y-column string
+    	The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored. (default "max_y")
+  -min-x-column string
+    	The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored. (default "min_x")
+  -min-y-column string
+    	The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored. (default "min_y")
+  -output string
+    	The path where your new CSV file should be created.
+  -to-stdout
+    	Output CSV data to STDOUT.
 ```
 
 ### marc-034d

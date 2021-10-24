@@ -1,3 +1,4 @@
+//
 package main
 
 import (
@@ -14,22 +15,44 @@ import (
 
 func main() {
 
-	marc034_column := flag.String("marc-034-column", "marc_034", "...")
-	minx_column := flag.String("min-x-column", "min_x", "...")
-	miny_column := flag.String("min-y-column", "min_y", "...")
-	maxx_column := flag.String("max-x-column", "max_x", "...")
-	maxy_column := flag.String("max-y-column", "max_y", "...")
+	marc034_column := flag.String("marc-034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
+	minx_column := flag.String("min-x-column", "min_x", "The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored.")
+	miny_column := flag.String("min-y-column", "min_y", "The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored.")
+	maxx_column := flag.String("max-x-column", "max_x", "The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored.")
+	maxy_column := flag.String("max-y-column", "max_y", "The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored.")
+
+	output := flag.String("output", "", "The path where your new CSV file should be created.")
+	stdout := flag.Bool("to-stdout", false, "Output CSV data to STDOUT.")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "...\n")
+		fmt.Fprintf(os.Stderr, "Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n\t %s csv-file(N) csv-file(N)\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 
 	flag.Parse()
 
-	writers := []io.Writer{
-		os.Stdout,
+	writers := make([]io.Writer, 0)
+
+	if *output != "" {
+
+		fh, err := os.OpenFile(*output, os.O_RDWR|os.O_CREATE, 0644)
+
+		if err != nil {
+			log.Fatalf("Failed to open %s for writing, %v", *output, err)
+		}
+
+		defer fh.Close()
+
+		writers = append(writers, fh)
+	}
+
+	if *stdout {
+		writers = append(writers, os.Stdout)
+	}
+
+	if len(writers) == 0 {
+		log.Fatalf("You must configure at least one output target")
 	}
 
 	mw := io.MultiWriter(writers...)

@@ -1,6 +1,7 @@
 cli:
 	go build -mod vendor -o bin/marc-034 cmd/marc-034/main.go
 	go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
+	go build -mod vendor -o bin/marc-034-convert cmd/marc-034-convert/main.go
 
 debug:
 	go run -mod vendor cmd/marc-034d/main.go -nextzen-api-key $(APIKEY)
