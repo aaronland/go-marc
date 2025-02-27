@@ -104,10 +104,16 @@ Usage:
 For example:
 
 ```
-$> ./bin/marc-034d -nextzen-api-key {APIKEY}
+$> bin/marc-034d \
+	-map-provider protomaps \
+	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles
 
-2018/01/12 09:12:44 listening on localhost:8080
+2025/02/27 09:43:38 listening on http://localhost:8080
 ```
+
+This will start the `marc-034d` server available for viewing at `http://localhost:8080` using [Protomap]() as the map tile provider reading a local PMFiles database. For example:
+
+![](docs/images/marc-034d-server.png)
 
 The `marc-034d` server exposes the following endpoints:
 
