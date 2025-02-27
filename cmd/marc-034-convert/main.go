@@ -4,13 +4,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-marc/fields"
-	"github.com/sfomuseum/go-csvdict"
 	"io"
 	"log"
 	"os"
-	"sort"
 	"strconv"
+
+	"github.com/aaronland/go-marc/v2/fields"
+	"github.com/sfomuseum/go-csvdict/v2"
 )
 
 func main() {
@@ -75,8 +75,7 @@ func main() {
 			log.Fatalf("Failed to create CSV reader for %s, %v", path, err)
 		}
 
-		for {
-			row, err := csv_r.Read()
+		for row, err := range csv_r.Iterate() {
 
 			if err == io.EOF {
 				break
@@ -111,24 +110,10 @@ func main() {
 
 			if csv_wr == nil {
 
-				fieldnames := make([]string, 0)
-
-				for k, _ := range row {
-					fieldnames = append(fieldnames, k)
-				}
-
-				sort.Strings(fieldnames)
-
-				wr, err := csvdict.NewWriter(mw, fieldnames)
+				wr, err := csvdict.NewWriter(mw)
 
 				if err != nil {
 					log.Fatalf("Failed to create new CSV writer, %v", err)
-				}
-
-				err = wr.WriteHeader()
-
-				if err != nil {
-					log.Fatalf("Failed to write CSV header, %v", err)
 				}
 
 				csv_wr = wr

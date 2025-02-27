@@ -3,13 +3,14 @@ package fields
 import (
 	"errors"
 	"fmt"
-	"github.com/paulmach/orb"
-	"github.com/paulmach/orb/geojson"
 	_ "log"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 )
 
 // https://www.loc.gov/marc/bibliographic/bd034.html

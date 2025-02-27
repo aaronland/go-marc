@@ -4,11 +4,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-marc/fields"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/aaronland/go-marc/v2/fields"
 )
 
 func main() {

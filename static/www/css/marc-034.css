@@ -1,0 +1,90 @@
+/* 034.css */
+
+body {
+	font-family: sans-serif;
+	margin-top:1rem !important;
+}
+
+code { 
+     color: brown;
+}
+
+form {
+	margin-bottom:1rem;
+}
+
+nav {
+	margin-bottom: 1rem;
+}
+
+nav a {
+	color: #000 !important;
+}
+
+.grid-view {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 50px 10px;
+    justify-items: center;
+}
+
+#map {
+	width:100%;
+	height:60vh;
+	border:solid thin;
+}
+
+.grid-view-item {
+	width:45vw;
+	max-width:45vw;
+	height:60vh;
+	max-height:60vh;
+	y-overflow:scroll !important;	
+}
+
+.grid-view-item pre {
+	padding: 1em;
+	font-size:small;
+	font-family: monospace;
+	max-height:60vh;
+	y-overflow:scroll !important;
+	border:solid thin;
+	
+}
+
+#bboxes {
+	margin-top:1rem;
+	margin-left:.5rem;
+}
+
+#bboxes ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#bboxes ul li {
+	list-style-type:none;
+	margin-bottom:.35em;
+}
+
+#marc {
+      margin:3%;
+      margin-bottom:0px !important;
+}
+
+#example {
+	margin-top:.5rem;
+	margin-bottom: .5rem;
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+
+	.grid-view {
+		grid-template-columns:1fr;
+	}
+
+	.grid-view-item {
+		width:90vw;
+		max-width:90vw;
+	}
+}

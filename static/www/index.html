@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	  <title>MARC 034 to bounding box tool</title>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	  <meta name="referrer" content="origin">
+	  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+	  <meta name="apple-mobile-web-app-capable" content="yes" />
+	  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	  <meta name="HandheldFriendly" content="true" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+	  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+	  <link rel="stylesheet" type="text/css" href="/css/leaflet.css" />	  	  
+	  <link rel="stylesheet" type="text/css" href="/css/marc-034.css" />
+  </head>
+  <body>
+
+      <div class="container">
+	  
+	  <div class="row">
+	      
+	      <h2>MARC 034 to bounding box tool</h2>	      
+	      <form class="form-inline">
+		  <div class="form-group mb-2" style="display:inline-block;">
+		      <!-- <label for="marc-34" class="sr-only">Enter a MARC 034 value to convert in to a bounding box</label> -->
+		      <input class="form-control" type="search" placeholder="Enter a MARC 034 value to convert in to a bounding box" id="marc-034" aria-label="Convert"   style="width:50vw;"/>
+		  </div>
+		  <button class="btn btn-primary" type="submit" id="submit" style="margin-bottom:.26rem;">Convert</button>
+	      </form>
+	  </div>
+
+	  <div class="row">
+	  <div class="grid-view">
+	      <div class="grid-view-item"><div id="map"></div></div>
+	      <div class="grid-view-item" id="raw"></div>
+	  </div>
+	  </div>
+
+	  <div id="example">
+	      <p>For example: <code>1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></p>
+	  </div>
+	  
+	  <div id="bboxes" class="row"></div>	  
+      </div>
+  </body>
+  
+  <script type="text/javascript" src="/javascript/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascript/leaflet.js"></script>
+  <script type="text/javascript" src="/javascript/protomaps-leaflet.js"></script>	  	  	  
+  <script type="text/javascript" src="/javascript/marc-034.init.js"></script>
+  
+</html>

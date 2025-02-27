@@ -1,16 +1,16 @@
+GOMOD=$(shell test -f "go.work" && echo "readonly" || echo "vendor")
+LDFLAGS=-s -w
+
+MAP_PROVIDER=protomaps
+MAP_TILE_URL=file:///usr/local/data/pmtiles/20240415.pmtiles
+
 cli:
-	go build -mod vendor -o bin/marc-034 cmd/marc-034/main.go
-	go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
-	go build -mod vendor -o bin/marc-034-convert cmd/marc-034-convert/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034 cmd/marc-034/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034d cmd/marc-034d/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034-convert cmd/marc-034-convert/main.go
 
 debug:
-	go run -mod vendor cmd/marc-034d/main.go -nextzen-api-key $(APIKEY)
-
-debug-tilepack:
-	go run -mod vendor cmd/marc-034d/main.go -nextzen-tilepack-database $(TILEPACK)
-
-docker:
-	docker build -t marc-034d .
-
-docker-debug:
-	docker run -it -p 8080:8080 -e 'MARC_NEXTZEN_APIKEY=$(APIKEY)' marc-034d
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
+		cmd/marc-034d/main.go \
+		-map-provider $(MAP_PROVIDER) \
+		-map-tile-uri $(MAP_TILE_URL)

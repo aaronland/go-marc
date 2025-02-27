@@ -4,34 +4,40 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/aaronland/go-http-bootstrap"
-	"github.com/aaronland/go-http-ping/v2"
-	"github.com/aaronland/go-http-server"
-	"github.com/aaronland/go-http-tangramjs"
-	"github.com/aaronland/go-marc/http"
-	"github.com/aaronland/go-marc/templates/html"
-	"github.com/sfomuseum/go-flags/flagset"
-	tiles_http "github.com/tilezen/go-tilepacks/http"
-	"github.com/tilezen/go-tilepacks/tilepack"
-	"html/template"
 	"log"
 	gohttp "net/http"
+	"net/url"
 	"os"
 	"strings"
+
+	"github.com/aaronland/go-http-server"
+	"github.com/aaronland/go-marc/v2/http"
+	"github.com/aaronland/go-marc/v2/static/www"
+	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-http-protomaps"
 )
+
+const leaflet_osm_tile_url = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+const protomaps_api_tile_url string = "https://api.protomaps.com/tiles/v3/{z}/{x}/{y}.mvt?key={key}"
 
 func main() {
 
+	var server_uri string
+	var map_provider string
+	var map_tile_uri string
+	var protomaps_theme string
+
+	var style string
+
 	fs := flagset.NewFlagSet("marc-034")
 
-	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
+	fs.StringVar(&map_provider, "map-provider", "leaflet", "Valid options are: leaflet, protomaps")
+	fs.StringVar(&map_tile_uri, "map-tile-uri", leaflet_osm_tile_url, "A valid Leaflet tile layer URI. See documentation for special-case (interpolated tile) URIs.")
+	fs.StringVar(&protomaps_theme, "protomaps-theme", "white", "A valid Protomaps theme label.")
 
-	nextzen_api_key := fs.String("nextzen-api-key", "xxxxxx", "A valid Nextzen API key")
-	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "A valid Nextzen style URL")
+	fs.StringVar(&style, "style", "", "A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.")
 
-	tilepack_db := fs.String("nextzen-tilepack-database", "", "The path to a valid MBTiles database (tilepack) containing Nextzen MVT tiles.")
-
-	tilepack_uri := fs.String("nextzen-tilepack-uri", "/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt", "The relative URI to serve Nextzen MVT tiles from a MBTiles database (tilepack).")
+	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
 	fs.Usage = func() {
 		fmt.Fprintf(os.Stderr, "marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).\n")
@@ -49,86 +55,68 @@ func main() {
 
 	ctx := context.Background()
 
-	t := template.New("marc")
-
-	t, err = t.ParseFS(html.FS, "*.html")
-
-	if err != nil {
-		log.Fatalf("Failed to parse templates, %v", err)
-	}
-
 	mux := gohttp.NewServeMux()
-
-	err = bootstrap.AppendAssetHandlers(mux)
-
-	if err != nil {
-		log.Fatalf("Failed to append Bootstrap asset handlers, %v", err)
-	}
-
-	err = tangramjs.AppendAssetHandlers(mux)
-
-	if err != nil {
-		log.Fatalf("Failed to append Tangram asset handlers, %v", err)
-	}
-
-	err = http.AppendStaticAssetHandlers(mux)
-
-	if err != nil {
-		log.Fatalf("Failed to append static asset handlers, %v", err)
-	}
-
-	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
-
-	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
-	tangramjs_opts.NextzenOptions.APIKey = *nextzen_api_key
-	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url
-
-	if *tilepack_db != "" {
-		tangramjs_opts.NextzenOptions.TileURL = *tilepack_uri
-	}
-
-	www_handler, err := http.MARC034Handler(t)
-
-	if err != nil {
-		log.Fatalf("Failed to create MARC034 handler, %v", err)
-	}
-
-	www_handler = tangramjs.AppendResourcesHandler(www_handler, tangramjs_opts)
-	www_handler = bootstrap.AppendResourcesHandler(www_handler, bootstrap_opts)
 
 	bbox_handler, err := http.BboxHandler()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create bbox handler, %v", err)
 	}
 
-	ping_handler, err := ping.PingPongHandler()
-
-	if err != nil {
-		log.Fatalf("Failed to create ping handler, %v", err)
-	}
-
-	mux.Handle("/", www_handler)
 	mux.Handle("/bbox", bbox_handler)
-	mux.Handle("/ping", ping_handler)
 
-	if *tilepack_db != "" {
+	// START OF put me in a function or something...
 
-		tiles_reader, err := tilepack.NewMbtilesReader(*tilepack_db)
+	map_cfg := &http.MapConfig{
+		Provider: map_provider,
+		TileURL:  map_tile_uri,
+		// Style:           style,
+	}
+
+	if map_provider == "protomaps" {
+
+		u, err := url.Parse(map_tile_uri)
 
 		if err != nil {
-			log.Fatalf("Failed to load tilepack, %v", err)
+			log.Fatalf("Failed to parse Protomaps tile URL, %v", err)
 		}
 
-		u := strings.TrimLeft(*tilepack_uri, "/")
-		p := strings.Split(u, "/")
-		path_tiles := fmt.Sprintf("/%s/", p[0])
+		switch u.Scheme {
+		case "file":
 
-		tiles_handler := tiles_http.MbtilesHandler(tiles_reader)
-		mux.Handle(path_tiles, tiles_handler)
+			mux_url, mux_handler, err := protomaps.FileHandlerFromPath(u.Path, "")
+
+			if err != nil {
+				log.Fatalf("Failed to determine absolute path for '%s', %v", map_tile_uri, err)
+			}
+
+			mux.Handle(mux_url, mux_handler)
+			map_cfg.TileURL = mux_url
+
+		case "api":
+			key := u.Host
+			map_cfg.TileURL = strings.Replace(protomaps_api_tile_url, "{key}", key, 1)
+		}
+
+		map_cfg.Protomaps = &http.ProtomapsConfig{
+			Theme: protomaps_theme,
+		}
 	}
 
-	s, err := server.NewServer(ctx, *server_uri)
+	// END OF put me in a function or something...
+
+	map_cfg_handler := http.MapConfigHandler(map_cfg)
+
+	mux.Handle("/map.json", map_cfg_handler)
+
+	//
+
+	www_fs := gohttp.FS(www.FS)
+	www_handler := gohttp.FileServer(www_fs)
+
+	mux.Handle("/", www_handler)
+
+	s, err := server.NewServer(ctx, server_uri)
 
 	if err != nil {
 		log.Fatalf("Failed to create new server, %v", err)
