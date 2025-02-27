@@ -151,10 +151,6 @@ window.addEventListener("load", function load(event){
                         theme: cfg.protomaps.theme,
                     })
 
-		    console.log("Add protomaps layer", tile_url, tile_layer);
-
-		    // map.setView([37.393073, -122.623901], 13);
-		    
                     tile_layer.addTo(map);
                     break;
 
