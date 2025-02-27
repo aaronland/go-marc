@@ -1,4 +1,4 @@
-module github.com/aaronland/go-marc
+module github.com/aaronland/go-marc/v2
 
 go 1.24.0
 

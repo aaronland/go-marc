@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/aaronland/go-marc/fields"
+	"github.com/aaronland/go-marc/v2/fields"
 	"github.com/sfomuseum/go-csvdict/v2"
 )
 

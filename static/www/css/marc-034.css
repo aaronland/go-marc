@@ -72,6 +72,10 @@ nav a {
       margin-bottom:0px !important;
 }
 
+#example {
+	margin-top:.5rem;
+	margin-bottom: .5rem;
+}
 
 @media (min-width: 320px) and (max-width: 768px) {
 

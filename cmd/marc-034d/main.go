@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/aaronland/go-http-server"
-	"github.com/aaronland/go-marc/http"
-	"github.com/aaronland/go-marc/static/www"
+	"github.com/aaronland/go-marc/v2/http"
+	"github.com/aaronland/go-marc/v2/static/www"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-http-protomaps"
 )

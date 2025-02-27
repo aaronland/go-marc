@@ -4,7 +4,7 @@ import (
 	gohttp "net/http"
 
 	"github.com/aaronland/go-http-sanitize"
-	"github.com/aaronland/go-marc/fields"
+	"github.com/aaronland/go-marc/v2/fields"
 )
 
 // BboxHandler returns a `net/http.Handler` instance for convert MARC 034 fields in to GeoJSON Features.
