@@ -5,21 +5,19 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3" // Register sqlite3 database driver
+	"github.com/paulmach/orb/maptile"
 )
 
 type TileData struct {
-	Tile *Tile
+	Tile maptile.Tile
 	Data *[]byte
 }
 
 type MbtilesReader interface {
 	Close() error
-	GetTile(tile *Tile) (*TileData, error)
-	VisitAllTiles(visitor func(*Tile, []byte)) error
-}
-
-type tileDataFromDatabase struct {
-	Data *[]byte
+	GetTile(tile maptile.Tile) (*TileData, error)
+	VisitAllTiles(visitor func(maptile.Tile, []byte)) error
+	Metadata() (*MbtilesMetadata, error)
 }
 
 func NewMbtilesReader(dsn string) (MbtilesReader, error) {
@@ -53,7 +51,7 @@ func (o *mbtilesReader) Close() error {
 }
 
 // GetTile returns data for the given tile.
-func (o *mbtilesReader) GetTile(tile *Tile) (*TileData, error) {
+func (o *mbtilesReader) GetTile(tile maptile.Tile) (*TileData, error) {
 	var data []byte
 
 	result := o.db.QueryRow("SELECT tile_data FROM tiles WHERE zoom_level=? AND tile_column=? AND tile_row=? LIMIT 1", tile.Z, tile.X, tile.Y)
@@ -76,13 +74,14 @@ func (o *mbtilesReader) GetTile(tile *Tile) (*TileData, error) {
 }
 
 // VisitAllTiles runs the given function on all tiles in this mbtiles archive.
-func (o *mbtilesReader) VisitAllTiles(visitor func(*Tile, []byte)) error {
+func (o *mbtilesReader) VisitAllTiles(visitor func(maptile.Tile, []byte)) error {
 	rows, err := o.db.Query("SELECT zoom_level, tile_column, tile_row, tile_data FROM tiles")
 	if err != nil {
 		return err
 	}
 
-	var z, x, y uint
+	var x, y uint32
+	var z maptile.Zoom
 	for rows.Next() {
 		data := []byte{}
 		err := rows.Scan(&z, &x, &y, &data)
@@ -90,8 +89,45 @@ func (o *mbtilesReader) VisitAllTiles(visitor func(*Tile, []byte)) error {
 			log.Printf("Couldn't scan row: %+v", err)
 		}
 
-		t := &Tile{Z: z, X: x, Y: y}
+		t := maptile.New(x, y, z)
 		visitor(t, data)
 	}
 	return nil
+}
+
+func (o *mbtilesReader) Metadata() (*MbtilesMetadata, error) {
+
+	metadata := make(map[string]string)
+
+	q := "SELECT name, value FROM metadata"
+	rows, err := o.db.Query(q)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var name string
+		var value string
+
+		err := rows.Scan(&name, &value)
+
+		if err != nil {
+			return nil, err
+		}
+
+		metadata[name] = value
+	}
+
+	rerr := rows.Close()
+
+	if rerr != nil {
+		return nil, err
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return NewMbtilesMetadata(metadata), nil
 }
