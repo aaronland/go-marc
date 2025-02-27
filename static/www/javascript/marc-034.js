@@ -4,46 +4,6 @@ window.addEventListener("load", function load(event){
 
     var map;
     
-    if (Tangram) {
-
-	var api_key = document.body.getAttribute("data-nextzen-api-key");
-	var style_url = document.body.getAttribute("data-nextzen-style-url");
-	var tile_url = document.body.getAttribute("data-nextzen-tile-url");
-	
-	var map = L.map("map");    
-
-	var tangramOptions = {
-            scene: {
-		import: [
-                    style_url
-		],
-		sources: {
-                    mapzen: {
-			url: tile_url,
-			// url_subdomains: ['a', 'b', 'c', 'd'],
-			url_params: {api_key: api_key},
-			tile_size: 512,
-			max_zoom: 16
-                    }
-		}
-            }
-	};
-	
-	var tangramLayer = Tangram.leafletLayer(tangramOptions);
-	tangramLayer.addTo(map);
-		
-	var sw = [ -55, -180 ];
-	var ne = [ 55, 180 ];
-	var bounds = [ sw, ne ];
-	
-	map.fitBounds(bounds);
-    }
-
-    else {
-
-	var el = document.getElementById("map");
-	el.innerText = "Maps are disabled because tangram.js is not present.";
-    }
     
     var m = document.getElementById("marc-034");
     m.value = "";

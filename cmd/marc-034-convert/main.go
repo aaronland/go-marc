@@ -10,7 +10,7 @@ import (
 	"strconv"
 
 	"github.com/aaronland/go-marc/fields"
-	"github.com/sfomuseum/go-csvdict/v2"	
+	"github.com/sfomuseum/go-csvdict/v2"
 )
 
 func main() {

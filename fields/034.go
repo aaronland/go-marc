@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/paulmach/orb"
-	"github.com/paulmach/orb/geojson"	
+	"github.com/paulmach/orb/geojson"
 )
 
 // https://www.loc.gov/marc/bibliographic/bd034.html

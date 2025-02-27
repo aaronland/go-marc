@@ -4,16 +4,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"html/template"
 	"log"
 	gohttp "net/http"
 	"os"
-	
-	"github.com/aaronland/go-http-bootstrap"
-	"github.com/aaronland/go-http-ping/v2"
+
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-marc/http"
-	"github.com/aaronland/go-marc/templates/html"
+	"github.com/aaronland/go-marc/static/www"
 	"github.com/sfomuseum/go-flags/flagset"
 )
 
@@ -39,36 +36,10 @@ func main() {
 
 	ctx := context.Background()
 
-	t := template.New("marc")
-
-	t, err = t.ParseFS(html.FS, "*.html")
-
-	if err != nil {
-		log.Fatalf("Failed to parse templates, %v", err)
-	}
-
 	mux := gohttp.NewServeMux()
 
-	bootstrap_opts := bootstrap.DefaultBootstrapOptions()	
-	err = bootstrap.AppendAssetHandlers(mux, bootstrap_opts)
-
-	if err != nil {
-		log.Fatalf("Failed to append Bootstrap asset handlers, %v", err)
-	}
-
-	err = http.AppendStaticAssetHandlers(mux)
-
-	if err != nil {
-		log.Fatalf("Failed to append static asset handlers, %v", err)
-	}
-
-	www_handler, err := http.MARC034Handler(t)
-
-	if err != nil {
-		log.Fatalf("Failed to create MARC034 handler, %v", err)
-	}
-
-	www_handler = bootstrap.AppendResourcesHandler(www_handler, bootstrap_opts)
+	www_fs := gohttp.FS(www.FS)
+	www_handler := gohttp.FileServer(www_fs)
 
 	bbox_handler, err := http.BboxHandler()
 
@@ -76,15 +47,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ping_handler, err := ping.PingPongHandler()
-
-	if err != nil {
-		log.Fatalf("Failed to create ping handler, %v", err)
-	}
-
 	mux.Handle("/", www_handler)
 	mux.Handle("/bbox", bbox_handler)
-	mux.Handle("/ping", ping_handler)
 
 	s, err := server.NewServer(ctx, *server_uri)
 
