@@ -127,6 +127,8 @@ This will start the `marc-034d` server available for viewing at `http://localhos
 
 ![](docs/images/marc-034d-server.png)
 
+The `marc-034d` server has NO ACCCESS CONTROLS. There is no default mechanism for limiting access but, really, it's kind of assumed that you're running this on your desktop and not the public internet. If there is a need to do the latter there are ways to add that later on.
+
 The `marc-034d` server exposes the following endpoints:
 
 #### / (or "root")
@@ -187,6 +189,8 @@ _Note the way the `034` parameter is URL-encoded._
 
 #### /convert
 
+The `/convert` endpoint accepts a CSV file "POST"-ed to the server as binary data and then returns a new CSV file with `min_x`, `min_y`, `max_x` and `max_y` properties.
+
 ```
 $> bin/marc-034d \
 	-map-provider protomaps \
@@ -200,6 +204,8 @@ id,marc_034,max_x,max_y,min_x,min_y,name
 123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example
 456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example
 ```
+
+Note that you can also just use the upload form in the web interface to do the same thing.
 
 ### Command-line flags and environment variables
 
