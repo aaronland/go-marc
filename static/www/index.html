@@ -37,16 +37,29 @@
 	  </div>
 
 	  <div id="example">
-	      <p>For example: <code>1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></p>
+	      <p>For example: <code id="example-marc">1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></p>
 	  </div>
 	  
-	  <div id="bboxes" class="row"></div>	  
+	  <div id="bboxes" class="row"></div>
+
+	  <div id="convert">
+	      <h4>Batch convert a CSV file with MARC 034 records</h4>
+	      <div id="convert-blurb">CSV file will be updated with <code>min_x</code>, <code>min_y</code>, <code>max_x</code> and <code>max_y</code> columns and downloaded as a new file.</div>
+	      <form class="form">
+		  <div class="form-group mb-2" style="display:inline-block;">
+		      <input type="file" id="file" />
+		  </div>
+		  <button class="btn btn-primary" type="submit" id="upload" style="margin-bottom:.26rem;">Upload</button>
+	      </form>
+	  </div>
+	  
       </div>
   </body>
   
   <script type="text/javascript" src="/javascript/bootstrap.min.js"></script>
   <script type="text/javascript" src="/javascript/leaflet.js"></script>
-  <script type="text/javascript" src="/javascript/protomaps-leaflet.js"></script>	  	  	  
+  <script type="text/javascript" src="/javascript/protomaps-leaflet.js"></script>
+  <script type="text/javascript" src="/javascript/aaronland.xhr.js"></script>  
   <script type="text/javascript" src="/javascript/marc-034.init.js"></script>
   
 </html>

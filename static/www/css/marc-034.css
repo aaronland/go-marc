@@ -77,6 +77,19 @@ nav a {
 	margin-bottom: .5rem;
 }
 
+#convert {
+	margin-top:1rem;
+	padding-top:1rem;
+	border-top: solid thin;
+}
+
+#convert-blurb {
+	margin-top:.5rem;
+	margin-bottom: .5rem;
+	font-size:small;
+	font-style:italic;
+}
+
 @media (min-width: 320px) and (max-width: 768px) {
 
 	.grid-view {

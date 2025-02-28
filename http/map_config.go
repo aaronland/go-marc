@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-// mapConfig defines common configuration details for maps.
+// MapConfig defines common configuration details for maps.
 type MapConfig struct {
 	// A valid map provider label.
 	Provider string `json:"provider"`
@@ -25,7 +25,7 @@ type MapConfig struct {
 	LabelProperties []string         `json:"label_properties"`
 }
 
-// protomapsConfig defines configuration details for maps using Protomaps.
+// ProtomapsConfig defines configuration details for maps using Protomaps.
 type ProtomapsConfig struct {
 	// A valid Protomaps theme label
 	Theme string `json:"theme"`

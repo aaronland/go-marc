@@ -9,6 +9,45 @@ window.addEventListener("load", function load(event){
 	
 	var m = document.getElementById("marc-034");
 	m.value = "";
+
+	var e = document.getElementById("example-marc");
+
+	e.onclick = function(){
+	    m.value = e.innerText;
+	    return false;
+	};
+	
+	var u = document.getElementById("upload");
+
+	u.onclick = function(){
+	    
+	    var f = document.getElementById("file");
+	    const files = f.files;
+
+	    if (files.length == 0){
+		console.log("No files");
+		return false;
+	    }
+
+	    const csv_f = files[0];
+
+	    aaronland.xhr.postFileAsBinaryData("/convert", csv_f).then((rsp) => {
+
+		var link = document.createElement('a');
+		link.href = window.URL.createObjectURL(rsp);
+		link.download = 'marc034-bbox.csv';
+		
+		document.body.appendChild(link);
+		link.click();
+
+		document.body.removeChild(link);
+		
+	    }).catch((err) => {
+		console.error("Failed to upload file", err);
+	    });
+	    
+	    return false;
+	};
 	
 	var s = document.getElementById("submit");
 	
