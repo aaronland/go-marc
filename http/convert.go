@@ -19,7 +19,9 @@ type ConvertHandlerOptions struct {
 	MaxYColumn    string
 }
 
-// ConvertHandler returns a `net/http.Handler` instance for convert MARC 034 fields in a CSV file.
+// ConvertHandler returns a `net/http.Handler` instance for converting one or more MARC 034 fields in a CSV file
+// and returning a new CSV file containing both the original data (MARC 034 and other) as well as the min_x, min_y,
+// max_x and max_y values for each MARC 034 value.
 func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
@@ -39,12 +41,12 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 			return
 		}
 
+		rsp.Header().Set("Content-Type", "text/csv")		
+
 		now := time.Now()
 		ts := now.Unix()
 
 		disposition := fmt.Sprintf("attachment; filename='marc034-bbox-%d.csv'", ts)
-
-		rsp.Header().Set("Content-Type", "text/csv")
 		rsp.Header().Set("Content-Disposition", disposition)
 
 		slog.Debug("Process", "disposition", disposition)
