@@ -13,4 +13,5 @@ debug:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
 		cmd/marc-034d/main.go \
 		-map-provider $(MAP_PROVIDER) \
-		-map-tile-uri $(MAP_TILE_URL)
+		-map-tile-uri $(MAP_TILE_URL) \
+		-allow-uploads

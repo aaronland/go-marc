@@ -1,6 +1,7 @@
 package http
 
 import (
+	"log/slog"
 	gohttp "net/http"
 	"strconv"
 
@@ -26,10 +27,13 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 			return
 		}
 
+		defer req.Body.Close()
+		
 		csv_r, err := csvdict.NewReader(req.Body)
 
 		if err != nil {
-			gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+			slog.Error("Failed to create new CSV reader", "error", err)
+			gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 			return
 		}
 
@@ -41,28 +45,32 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 		for row, err := range csv_r.Iterate() {
 
 			if err != nil {
-				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				slog.Error("Failed to iterate row", "error", err)
+				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
 
 			value, ok := row[opts.Marc034Column]
 
 			if !ok {
-				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				slog.Error("Row is missing MARC 034 column", "column", opts.Marc034Column)
+				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
 
 			p, err := fields.Parse034(value)
 
 			if err != nil {
-				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				slog.Error("Failed to parse MARC 034 value", "value", value, "error", err)
+				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
 
 			b, err := p.Bound()
 
 			if err != nil {
-				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				slog.Error("Failed to derive bounds for MARC 034 value", "value", value, "error", err)
+				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
 
@@ -76,7 +84,8 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 				wr, err := csvdict.NewWriter(rsp)
 
 				if err != nil {
-					gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+					slog.Error("Failed to create CSV writer", "error", err)
+					gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 					return
 				}
 
@@ -86,12 +95,16 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 			err = csv_wr.WriteRow(row)
 
 			if err != nil {
-				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				slog.Error("Failed to write CSV row", "error", err)
+				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
 		}
 
-		csv_wr.Flush()
+		if csv_wr != nil {
+			csv_wr.Flush()
+		}
+
 		return
 	}
 

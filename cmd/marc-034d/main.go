@@ -44,14 +44,14 @@ func main() {
 
 	fs.StringVar(&style, "style", "", "A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.")
 
-	fs.BoolVar(&allow_uploads, "allow-uploads", false, "...")
+	fs.BoolVar(&allow_uploads, "allow-uploads", true, "Allow uploading and converting of CSV encoded MARC 034 reocrds.")
 	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
 	fs.StringVar(&minx_column, "minx-column", "min_x", "The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored.")
-	fs.StringVar(&miny_column, "miny-column", "min_y", "...")
-	fs.StringVar(&maxx_column, "maxx-column", "max_x", "...")
-	fs.StringVar(&maxy_column, "maxy-column", "max_y", "...")
+	fs.StringVar(&miny_column, "miny-column", "min_y", "The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored.")
+	fs.StringVar(&maxx_column, "maxx-column", "max_x", "The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored.")
+	fs.StringVar(&maxy_column, "maxy-column", "max_y", "The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored.")
 
-	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
+	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
 
 	fs.Usage = func() {
 		fmt.Fprintf(os.Stderr, "marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).\n")
