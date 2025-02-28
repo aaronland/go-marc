@@ -9,6 +9,15 @@ window.addEventListener("load", function load(event){
 	
 	var m = document.getElementById("marc-034");
 	m.value = "";
+
+	var u = document.getElementById("upload");
+
+	u.onclick = function(){
+	    
+	    var f = document.getElementById("file");
+	    console.log("FILE", f);
+	    return false;
+	};
 	
 	var s = document.getElementById("submit");
 	
