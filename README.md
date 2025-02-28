@@ -123,7 +123,7 @@ $> bin/marc-034d \
 2025/02/27 09:43:38 listening on http://localhost:8080
 ```
 
-This will start the `marc-034d` server available for viewing at `http://localhost:8080` using [Protomap]() as the map tile provider reading a local PMFiles database. For example:
+This will start the `marc-034d` server available for viewing at `http://localhost:8080` using [Protomaps](https://protomaps.com) as the map tile provider reading a local PMFiles database. For example:
 
 ![](docs/images/marc-034d-server.png)
 
