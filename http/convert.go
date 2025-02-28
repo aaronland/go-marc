@@ -1,9 +1,11 @@
 package http
 
 import (
+	"fmt"
 	"log/slog"
 	gohttp "net/http"
 	"strconv"
+	"time"
 
 	"github.com/aaronland/go-marc/v2/fields"
 	"github.com/sfomuseum/go-csvdict/v2"
@@ -28,7 +30,7 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 		}
 
 		defer req.Body.Close()
-		
+
 		csv_r, err := csvdict.NewReader(req.Body)
 
 		if err != nil {
@@ -37,10 +39,17 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 			return
 		}
 
-		var csv_wr *csvdict.Writer
+		now := time.Now()
+		ts := now.Unix()
+
+		disposition := fmt.Sprintf("attachment; filename='marc034-bbox-%d.csv'", ts)
 
 		rsp.Header().Set("Content-Type", "text/csv")
-		rsp.Header().Set("Access-Control-Allow-Origin", "*")
+		rsp.Header().Set("Content-Disposition", disposition)
+
+		slog.Debug("Process", "disposition", disposition)
+
+		var csv_wr *csvdict.Writer
 
 		for row, err := range csv_r.Iterate() {
 
@@ -49,6 +58,8 @@ func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 				gohttp.Error(rsp, "Internal server error", gohttp.StatusInternalServerError)
 				return
 			}
+
+			slog.Debug("Process", "row", row)
 
 			value, ok := row[opts.Marc034Column]
 

@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	gohttp "net/http"
 	"net/url"
 	"os"
@@ -21,6 +22,8 @@ const leaflet_osm_tile_url = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 const protomaps_api_tile_url string = "https://api.protomaps.com/tiles/v3/{z}/{x}/{y}.mvt?key={key}"
 
 func main() {
+
+	var verbose bool
 
 	var server_uri string
 	var map_provider string
@@ -51,6 +54,8 @@ func main() {
 
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
 
+	fs.BoolVar(&verbose, "verbose", false, "Enable verbose (debug) logging.")
+
 	fs.Usage = func() {
 		fmt.Fprintf(os.Stderr, "marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n\t %s [options]\n", os.Args[0])
@@ -63,6 +68,11 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Failed to assign flags from environment variables, %v", err)
+	}
+
+	if verbose {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+		slog.Debug("Verbose logging enabled")
 	}
 
 	ctx := context.Background()
@@ -84,13 +94,13 @@ func main() {
 		MaxXColumn:    maxx_column,
 		MaxYColumn:    maxy_column,
 	}
-	
+
 	convert_handler, err := http.ConvertHandler(convert_opts)
-	
+
 	if err != nil {
 		log.Fatalf("Failed to create convert handler, %v", err)
 	}
-	
+
 	mux.Handle("/convert", convert_handler)
 
 	// START OF put me in a function or something...

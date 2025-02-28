@@ -15,7 +15,51 @@ window.addEventListener("load", function load(event){
 	u.onclick = function(){
 	    
 	    var f = document.getElementById("file");
-	    console.log("FILE", f);
+	    const files = f.files;
+
+	    if (files.length == 0){
+		console.log("No files");
+		return false;
+	    }
+
+	    const csv_f = files[0];
+
+	    // START OF put me in a function or something...
+
+	    const xhr = new XMLHttpRequest();
+	    xhr.open('POST', "/convert", true);
+	    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+	    
+	    const reader = new FileReader();
+	    
+	    reader.onload = function(event) {
+		console.log("READ", event.target);
+		const arrayBuffer = event.target.result;
+		xhr.send(arrayBuffer);
+	    };
+	    
+	    reader.onerror = function() {
+		console.error('Error reading file');
+	    };
+	    
+	    reader.readAsArrayBuffer(csv_f);
+	    
+	    xhr.onload = function() {
+		if (xhr.status >= 200 && xhr.status < 300) {
+		    console.log('File uploaded successfully');
+		} else {
+		    console.error('Upload failed with status:', xhr.status);
+		};
+		
+	    };
+	    
+	    xhr.onerror = function() {
+		console.error('Request error');
+	    };
+	    
+	    // END OF put me in a function or something...
+	    
+	    console.log("FILE", f, f.files);
 	    return false;
 	};
 	
