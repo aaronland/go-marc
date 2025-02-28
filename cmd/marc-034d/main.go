@@ -29,6 +29,13 @@ func main() {
 
 	var style string
 
+	var allow_uploads bool
+	var marc034_column string
+	var minx_column string
+	var miny_column string
+	var maxx_column string
+	var maxy_column string
+
 	fs := flagset.NewFlagSet("marc-034")
 
 	fs.StringVar(&map_provider, "map-provider", "leaflet", "Valid options are: leaflet, protomaps")
@@ -36,6 +43,13 @@ func main() {
 	fs.StringVar(&protomaps_theme, "protomaps-theme", "white", "A valid Protomaps theme label.")
 
 	fs.StringVar(&style, "style", "", "A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.")
+
+	fs.BoolVar(&allow_uploads, "allow-uploads", false, "...")
+	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
+	fs.StringVar(&minx_column, "minx-column", "min_x", "The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored.")
+	fs.StringVar(&miny_column, "miny-column", "min_y", "...")
+	fs.StringVar(&maxx_column, "maxx-column", "max_x", "...")
+	fs.StringVar(&maxy_column, "maxy-column", "max_y", "...")
 
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI")
 
@@ -64,6 +78,25 @@ func main() {
 	}
 
 	mux.Handle("/bbox", bbox_handler)
+
+	if allow_uploads {
+
+		convert_opts := &http.ConvertHandlerOptions{
+			Marc034Column: marc034_column,
+			MinXColumn:    minx_column,
+			MinYColumn:    miny_column,
+			MaxXColumn:    maxx_column,
+			MaxYColumn:    maxy_column,
+		}
+
+		convert_handler, err := http.ConvertHandler(convert_opts)
+
+		if err != nil {
+			log.Fatalf("Failed to create convert handler, %v", err)
+		}
+
+		mux.Handle("/convert", convert_handler)
+	}
 
 	// START OF put me in a function or something...
 
