@@ -205,7 +205,7 @@ id,marc_034,max_x,max_y,min_x,min_y,name
 456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example
 ```
 
-Note that you can also just use the upload form in the web interface to do the same thing.
+_Note that you can also just use the upload form in the web interface to do the same thing if you don't want to use the command line._
 
 ### Command-line flags and environment variables
 
