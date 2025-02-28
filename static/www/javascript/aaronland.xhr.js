@@ -11,6 +11,7 @@ aaronland.xhr = (function(){
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', url, true);
 		xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+		xhr.responseType = "blob";
 		
 		const reader = new FileReader();
 		
@@ -29,8 +30,8 @@ aaronland.xhr = (function(){
 		xhr.onload = function() {
 		    
 		    if (xhr.status >= 200 && xhr.status < 300) {
-			console.log('File uploaded successfully');
-			resolve();
+			console.debug('File uploaded successfully');
+			resolve(xhr.response);
 		    } else {
 			console.error('Upload failed with status:', xhr.status);
 			reject(xhr.status);

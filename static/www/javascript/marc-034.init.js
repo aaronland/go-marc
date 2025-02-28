@@ -10,6 +10,13 @@ window.addEventListener("load", function load(event){
 	var m = document.getElementById("marc-034");
 	m.value = "";
 
+	var e = document.getElementById("example-marc");
+
+	e.onclick = function(){
+	    m.value = e.innerText;
+	    return false;
+	};
+	
 	var u = document.getElementById("upload");
 
 	u.onclick = function(){
@@ -25,9 +32,18 @@ window.addEventListener("load", function load(event){
 	    const csv_f = files[0];
 
 	    aaronland.xhr.postFileAsBinaryData("/convert", csv_f).then((rsp) => {
-		console.log("OKAY", rsp);
+
+		var link = document.createElement('a');
+		link.href = window.URL.createObjectURL(rsp);
+		link.download = 'marc034-bbox.csv';
+		
+		document.body.appendChild(link);
+		link.click();
+
+		document.body.removeChild(link);
+		
 	    }).catch((err) => {
-		console.error("SAD", err);
+		console.error("Failed to upload file", err);
 	    });
 	    
 	    return false;
