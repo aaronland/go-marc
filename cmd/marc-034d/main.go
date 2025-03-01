@@ -89,10 +89,6 @@ func main() {
 
 	convert_opts := &http.ConvertHandlerOptions{
 		Marc034Column: marc034_column,
-		MinXColumn:    minx_column,
-		MinYColumn:    miny_column,
-		MaxXColumn:    maxx_column,
-		MaxYColumn:    maxy_column,
 	}
 
 	convert_handler, err := http.ConvertHandler(convert_opts)
