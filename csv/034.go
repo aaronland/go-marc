@@ -9,6 +9,10 @@ import (
 	"github.com/sfomuseum/go-csvdict/v2"
 )
 
+// Convert034 will process 'r' as though it were a CSV data containing a MARC 034 data appending `min_x`, `min_y`
+// `max_x` and `max_y` columns (derived from the MARC 034 data. It was also append a `valid` column indicating
+// whether the MARC 034 data could be parsed as well as an `error` column which will be populated in the event
+// that MARC 034 data could not be parsed.
 func Convert034(r io.Reader, wr io.Writer, marc034_column string) error {
 
 	csv_r, err := csvdict.NewReader(r)
