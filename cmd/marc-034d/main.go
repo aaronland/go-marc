@@ -33,10 +33,6 @@ func main() {
 	var style string
 
 	var marc034_column string
-	var minx_column string
-	var miny_column string
-	var maxx_column string
-	var maxy_column string
 
 	fs := flagset.NewFlagSet("marc-034")
 
@@ -47,10 +43,6 @@ func main() {
 	fs.StringVar(&style, "style", "", "A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.")
 
 	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
-	fs.StringVar(&minx_column, "minx-column", "min_x", "The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored.")
-	fs.StringVar(&miny_column, "miny-column", "min_y", "The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored.")
-	fs.StringVar(&maxx_column, "maxx-column", "max_x", "The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored.")
-	fs.StringVar(&maxy_column, "maxy-column", "max_y", "The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored.")
 
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
 
@@ -89,10 +81,6 @@ func main() {
 
 	convert_opts := &http.ConvertHandlerOptions{
 		Marc034Column: marc034_column,
-		MinXColumn:    minx_column,
-		MinYColumn:    miny_column,
-		MaxXColumn:    maxx_column,
-		MaxYColumn:    maxy_column,
 	}
 
 	convert_handler, err := http.ConvertHandler(convert_opts)

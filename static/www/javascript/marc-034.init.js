@@ -6,6 +6,8 @@ window.addEventListener("load", function load(event){
     var map = L.map('map').setView([0.0, 0.0], 1);    
 
     var init = function(cfg){
+
+	var f = document.getElementById("feedback");
 	
 	var m = document.getElementById("marc-034");
 	m.value = "";
@@ -29,6 +31,8 @@ window.addEventListener("load", function load(event){
 		return false;
 	    }
 
+	    f.innerHTML = "";
+	    
 	    const csv_f = files[0];
 
 	    aaronland.xhr.postFileAsBinaryData("/convert", csv_f).then((rsp) => {
@@ -43,6 +47,7 @@ window.addEventListener("load", function load(event){
 		document.body.removeChild(link);
 		
 	    }).catch((err) => {
+		f.innerText = "Failed to upload file, " + err;
 		console.error("Failed to upload file", err);
 	    });
 	    
@@ -63,6 +68,8 @@ window.addEventListener("load", function load(event){
 	    
 	    var enc = encodeURIComponent(m);
 	    var url = location.protocol + "//" + location.host + "/bbox?034=" + enc;
+
+	    f.innerHTML = "";
 	    
 	    var raw = document.getElementById("raw");
 	    raw.innerHTML = "";
@@ -142,12 +149,18 @@ window.addEventListener("load", function load(event){
 	    var req = new XMLHttpRequest();
 	    
 	    req.onload = function(){
+
+		if (req.status != 200){
+		    f.innerText = "Failed to parse data, server returned error: " + req.response;
+		    return false;		    
+		}
 		
 		try {
 		    var data = JSON.parse(this.responseText);
 		}
 		
 		catch (e){
+		    f.innerText = "Failed to parse data, " + e;
 		    console.log("ERROR", e);
 		    return false;
 		}
