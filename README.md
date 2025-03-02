@@ -89,17 +89,6 @@ Usage:
     	A valid Leaflet tile layer URI. See documentation for special-case (interpolated tile) URIs. (default "https://tile.openstreetmap.org/{z}/{x}/{y}.png")
   -marc034-column string
     	The name of the CSV column where MARC 034 data is stored. (default "marc_034")
-<<<<<<< HEAD
-  -maxx-column string
-    	The name of the CSV column where the right-side coordinate (max x) of the bounding box should be stored. (default "max_x")
-  -maxy-column string
-    	The name of the CSV column where the top-side coordinate (max y) of the bounding box should be stored. (default "max_y")
-  -minx-column string
-    	The name of the CSV column where the left-side coordinate (min x) of the bounding box should be stored. (default "min_x")
-  -miny-column string
-    	The name of the CSV column where the bottom-side coordinate (min y) of the bounding box should be stored. (default "min_y")
-=======
->>>>>>> 27a36e5b70fb3be7f5014b0087d632afcbc74d32
   -protomaps-theme string
     	A valid Protomaps theme label. (default "white")
   -server-uri string
@@ -193,13 +182,6 @@ $> bin/marc-034d \
 	-allow-uploads
 ```		
 
-<<<<<<< HEAD
-```
-$> curl -X POST http://localhost:8080/convert --data-binary @fixtures/marc034.csv
-id,marc_034,max_x,max_y,min_x,min_y,name
-123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example
-456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example
-=======
 For example:
 
 ```
@@ -207,7 +189,6 @@ $> curl -X POST http://localhost:8080/convert --data-binary @fixtures/marc034.cs
 error,id,marc_034,max_x,max_y,min_x,min_y,name,valid
 ,123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example,1
 ,456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example,1
->>>>>>> 27a36e5b70fb3be7f5014b0087d632afcbc74d32
 ```
 
 _Note that you can also just use the upload form in the web interface to do the same thing if you don't want to use the command line._
