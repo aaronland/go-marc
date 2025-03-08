@@ -77,16 +77,6 @@ window.addEventListener("load", function load(event){
 	    var bboxes = document.getElementById("bboxes");
 	    bboxes.innerHTML = "";
 	    
-	    /*
-	       if (map){
-	       var sw = [ -55, -180 ];
-	       var ne = [ 55, 180 ];
-	       var bounds = [ sw, ne ];
-	       
-	       map.fitBounds(bounds);
-	       }
-	     */
-	    
 	    var on_success = function(rsp){
 		
 		var str = JSON.stringify(rsp, null, 2);
@@ -138,12 +128,57 @@ window.addEventListener("load", function load(event){
 		    var bounds = [ sw, ne ];
 		    var opts = { padding: [20, 20] };
 		    
-		    console.log("FIT BOUNDS", bounds)
 		    map.fitBounds(bounds, opts);
 		    
 		    var layer = L.geoJSON(rsp);
 		    layer.addTo(map);
 		}
+
+		// intersects stuff
+		
+		var geom = rsp.geometry;
+		
+		var args = {
+		    geometry: geom,
+		};
+
+		var intersects_el = document.getElementById("intersects");
+		intersects_el.innerHTML = "";
+		
+		console.log("INTERSECTS", args);
+
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", "/intersects", true);
+		xhr.setRequestHeader("Content-Type", "application/json");
+
+		xhr.onload = function(){
+
+		    if (xhr.status != 200){
+
+			intersect_el.innerText = "Unable to derive intersecting geometries";
+			console.err("Failed to derive intersecting", req.response);
+			return false;		    
+		    }
+
+		    try {
+			var data = JSON.parse(xhr.responseText);
+			console.log("DATA", data);
+
+			var str = JSON.stringify(data, null, 2);
+			var pre = document.createElement("pre");
+			pre.appendChild(document.createTextNode(str));
+
+			intersects_el.appendChild(pre);
+			
+		    } catch (err) {
+
+			intersect_el.innerText = "Failed to parse intersecting geometries";
+			console.err("Failed to parse intersecting", err);
+			
+		    }
+		};
+		
+		xhr.send(JSON.stringify(args));
 	    };
 	    
 	    var req = new XMLHttpRequest();
