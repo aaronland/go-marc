@@ -81,8 +81,14 @@ $> ./bin/marc-034d -h
 marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).
 Usage:
 	 ./bin/marc-034d [options]
-  -allow-uploads
-    	Allow uploading and converting of CSV encoded MARC 034 reocrds. (default true)
+  -enable-intersects
+    	Enable intersecting geometry lookups for MARC034-derived bounding boxes.
+  -initial-view string
+    	A comma-separated string indicating the map's initial view. Valid options are: 'LON,LAT', 'LON,LAT,ZOOM' or 'MINX,MINY,MAXX,MAXY'.
+  -leaflet-point-style string
+    	A custom Leaflet style definition for point geometries. This may either be a JSON-encoded string or a path on disk.
+  -leaflet-style string
+    	A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.
   -map-provider string
     	Valid options are: leaflet, protomaps (default "leaflet")
   -map-tile-uri string
@@ -93,8 +99,12 @@ Usage:
     	A valid Protomaps theme label. (default "white")
   -server-uri string
     	A valid aaronland/go-http-server URI. (default "http://localhost:8080")
-  -style string
-    	A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.
+  -spatial-database-source value
+    	Zero or more '{ITERATOR_URI}#{ITERATOR_SOURCE}' strings following the whosonfirst/go-whosonfirst-iterate/v2 URI syntax.
+  -spatial-database-uri string
+    	A registered whosonfirst/go-whosonfirst-spatial/database.SpatialDatabase URI.
+  -verbose
+    	Enable verbose (debug) logging.
 ```
 
 For example:
@@ -192,6 +202,62 @@ error,id,marc_034,max_x,max_y,min_x,min_y,name,valid
 ```
 
 _Note that you can also just use the upload form in the web interface to do the same thing if you don't want to use the command line._
+
+#### Intersecting (Who's On First) geometries
+
+There is optional support for retrieving [Who's On First](https://whosonfirst.org) records whose geometries intersect a bounding box derive from a MARC o34 record. For example:
+
+```
+$> bin/marc-034d \
+	-map-provider protomaps \
+	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles \
+	-enable-intersects \
+	-spatial-database-uri 'rtree:///?strict=false&index_alt_files=0' \
+	-spatial-database-source 'repo://#/usr/local/data/sfomuseum-data-whosonfirst'
+	
+2025/03/07 17:02:44 INFO Indexing spatial database.
+2025/03/07 17:03:11 INFO time to index paths (1) 27.344129833s
+2025/03/07 17:03:11 INFO Listening for requests address=http://localhost:8080
+```
+
+Which will produce results like this:
+
+![](docs/images/go-marc-034-intersects.png)
+
+Under the hood this is using the [whosonfirst/go-whosonfirst-spatial](https://github.com/whosonfirst/go-whosonfirst-spatial) package. That package is written in such a way as to be database-agnostic. It provides a default in-memory RTree-based spatial index but other (more performant) database implementations are defined in other packages.
+
+That's the `-spatial-database-uri 'rtree:///?strict=false&index_alt_files=0'` part in the command above. That's also why it takes 27 seconds to index the [sfomuseum-data/sfomuseum-data-whosonfirst](https://github.com/sfomuseum-data/sfomuseum-data-whosonfirst) repository. There are package implementing the `go-whosonfirst-spatial` interfaces for the following databases:
+
+* [whosonfirst/go-whosonfirst-spatial-sqlite](https://github.com/whosonfirst/go-whosonfirst-spatial-sqlite)
+* [whosonfirst/go-whosonfirst-spatial-pmtiles](https://github.com/whosonfirst/go-whosonfirst-spatial-pmtiles)
+* [whosonfirst/go-whosonfirst-spatial-duckdb](https://github.com/whosonfirst/go-whosonfirst-spatial-duckdb)
+
+Support for these databases is _not_ bundled with this package. In order to use them you will need to clone the `cmd/marc-034d` tool and add the relevant. To that end the "guts" of that application have been moved in to an easy-to-use package to save time-and-typing. For example here is how you would write a custom `marc-034d` tool to use a SQLite database:
+
+```
+package main
+
+import (
+	"context"
+	"log"
+
+	_ "github.com/whosonfirst/go-whosonfirst-spatial-sqlite"
+	"github.com/aaronland/go-marc/v2/app/server"
+)
+
+func main() {
+
+	ctx := context.Background()
+	err := server.Run(ctx)
+
+	if err != nil {
+		log.Fatalf("Failed to run server, %v", err)
+	}
+}
+
+```
+
+Support for intersecting geometries is not yet available in the other command line tools or the `marc-034d` batch convert endpoint.
 
 ### Command-line flags and environment variables
 

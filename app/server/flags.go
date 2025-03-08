@@ -36,9 +36,9 @@ func DefaultFlagSet() *flag.FlagSet {
 	fs.StringVar(&leaflet_point_style, "leaflet-point-style", "", "A custom Leaflet style definition for point geometries. This may either be a JSON-encoded string or a path on disk.")
 	fs.StringVar(&initial_view, "initial-view", "", "A comma-separated string indicating the map's initial view. Valid options are: 'LON,LAT', 'LON,LAT,ZOOM' or 'MINX,MINY,MAXX,MAXY'.")
 
-	fs.BoolVar(&enable_intersects, "enable-intersects", false, "...")
-	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "...")
-	fs.Var(&spatial_database_sources, "spatial-database-source", "Zero or more...")
+	fs.BoolVar(&enable_intersects, "enable-intersects", false, "Enable intersecting geometry lookups for MARC034-derived bounding boxes.")
+	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "A registered whosonfirst/go-whosonfirst-spatial/database.SpatialDatabase URI.")
+	fs.Var(&spatial_database_sources, "spatial-database-source", "Zero or more '{ITERATOR_URI}#{ITERATOR_SOURCE}' strings following the whosonfirst/go-whosonfirst-iterate/v2 URI syntax.")
 
 	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
