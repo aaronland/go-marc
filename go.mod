@@ -9,7 +9,7 @@ require (
 	github.com/paulmach/orb v0.11.1
 	github.com/sfomuseum/go-csvdict/v2 v2.0.1
 	github.com/sfomuseum/go-flags v0.10.0
-	github.com/whosonfirst/go-whosonfirst-spatial v0.13.0
+	github.com/whosonfirst/go-whosonfirst-spatial v0.13.1
 	github.com/whosonfirst/go-whosonfirst-spr-geojson v0.0.8
 )
 

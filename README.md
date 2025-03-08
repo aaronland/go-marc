@@ -205,7 +205,7 @@ _Note that you can also just use the upload form in the web interface to do the 
 
 #### Intersecting (Who's On First) geometries
 
-There is optional support for retrieving [Who's On First](https://whosonfirst.org) records whose geometries intersect a bounding box derive from a MARC o34 record. For example:
+There is optional support for retrieving [Who's On First](https://whosonfirst.org) records whose geometries intersect a bounding box derived from a MARC 034 record. For example:
 
 ```
 $> bin/marc-034d \
