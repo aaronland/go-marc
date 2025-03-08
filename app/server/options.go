@@ -8,17 +8,18 @@ import (
 )
 
 type RunOptions struct {
-	ServerURI          string
-	MARC034Column      string
-	MapProvider        string
-	MapTileURI         string
-	InitialView        string
-	LeafletStyle       string
-	LeafletPointStyle  string
-	ProtomapsTheme     string
-	EnableIntersects   bool
-	SpatialDatabaseURI string
-	Verbose            bool
+	ServerURI              string
+	MARC034Column          string
+	MapProvider            string
+	MapTileURI             string
+	InitialView            string
+	LeafletStyle           string
+	LeafletPointStyle      string
+	ProtomapsTheme         string
+	EnableIntersects       bool
+	SpatialDatabaseURI     string
+	SpatialDatabaseSources map[string][]string
+	Verbose                bool
 }
 
 func RunOptionsFromFlagSet(fs *flag.FlagSet) (*RunOptions, error) {
@@ -32,16 +33,17 @@ func RunOptionsFromFlagSet(fs *flag.FlagSet) (*RunOptions, error) {
 	}
 
 	opts := &RunOptions{
-		ServerURI:          server_uri,
-		MARC034Column:      marc034_column,
-		MapProvider:        map_provider,
-		MapTileURI:         map_tile_uri,
-		LeafletStyle:       leaflet_style,
-		LeafletPointStyle:  leaflet_point_style,
-		ProtomapsTheme:     protomaps_theme,
-		EnableIntersects:   enable_intersects,
-		SpatialDatabaseURI: spatial_database_uri,
-		Verbose:            verbose,
+		ServerURI:              server_uri,
+		MARC034Column:          marc034_column,
+		MapProvider:            map_provider,
+		MapTileURI:             map_tile_uri,
+		LeafletStyle:           leaflet_style,
+		LeafletPointStyle:      leaflet_point_style,
+		ProtomapsTheme:         protomaps_theme,
+		EnableIntersects:       enable_intersects,
+		SpatialDatabaseURI:     spatial_database_uri,
+		SpatialDatabaseSources: spatial_database_sources.AsMap(),
+		Verbose:                verbose,
 	}
 
 	return opts, nil

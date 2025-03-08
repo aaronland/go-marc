@@ -84,6 +84,17 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			return fmt.Errorf("Failed to create new spatial database, %w", err)
 		}
 
+		if len(opts.SpatialDatabaseSources) {
+			
+			slog.Info("Indexing spatial database.")
+
+			err = database.IndexDatabaseWithIterators(ctx, db, opts.SpatialDatabaseSources)
+			
+			if err != nil {
+				return fmt.Errorf("Failed to index database, %w", err)
+			}
+		}
+		
 		intersects_opts := &http.IntersectsHandlerOptions{
 			SpatialDatabase: db,
 			EnableGeoJSON:   true,

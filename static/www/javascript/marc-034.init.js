@@ -77,16 +77,6 @@ window.addEventListener("load", function load(event){
 	    var bboxes = document.getElementById("bboxes");
 	    bboxes.innerHTML = "";
 	    
-	    /*
-	       if (map){
-	       var sw = [ -55, -180 ];
-	       var ne = [ 55, 180 ];
-	       var bounds = [ sw, ne ];
-	       
-	       map.fitBounds(bounds);
-	       }
-	     */
-	    
 	    var on_success = function(rsp){
 		
 		var str = JSON.stringify(rsp, null, 2);
@@ -138,12 +128,38 @@ window.addEventListener("load", function load(event){
 		    var bounds = [ sw, ne ];
 		    var opts = { padding: [20, 20] };
 		    
-		    console.log("FIT BOUNDS", bounds)
 		    map.fitBounds(bounds, opts);
 		    
 		    var layer = L.geoJSON(rsp);
 		    layer.addTo(map);
 		}
+
+		// intersects stuff
+		
+		var geom = rsp.geometry;
+		
+		var args = {
+		    geometry: geom,
+		};
+
+		console.log("INTERSECTS", args);
+
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", "/intersects", true);
+		xhr.setRequestHeader("Content-Type", "application/json");
+
+		xhr.onload = function(){
+		    
+		    if (xhr.status != 200){
+			console.log("WOMP", req.response);
+			return false;		    
+		    }
+		    
+		    var data = JSON.parse(req.responseText);
+		    console.log("DATA", data);
+		};
+		
+		xhr.send(JSON.stringify(args));
 	    };
 	    
 	    var req = new XMLHttpRequest();

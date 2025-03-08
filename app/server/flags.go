@@ -7,6 +7,7 @@ import (
 
 	"github.com/aaronland/go-http-maps/v2"
 	"github.com/sfomuseum/go-flags/flagset"
+	spatial_flags "github.com/whosonfirst/go-whosonfirst-spatial/flags"
 )
 
 var verbose bool
@@ -15,6 +16,7 @@ var marc034_column string
 
 var enable_intersects bool
 var spatial_database_uri string
+var spatial_database_sources spatial_flags.MultiCSVIteratorURIFlag
 
 var map_provider string
 var map_tile_uri string
@@ -36,6 +38,7 @@ func DefaultFlagSet() *flag.FlagSet {
 
 	fs.BoolVar(&enable_intersects, "enable-intersects", false, "...")
 	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "...")
+	fs.Var(&spatial_database_sources, "spatial-database-source", "Zero or more...")
 
 	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
