@@ -232,7 +232,7 @@ That's the `-spatial-database-uri 'rtree:///?strict=false&index_alt_files=0'` pa
 * [whosonfirst/go-whosonfirst-spatial-pmtiles](https://github.com/whosonfirst/go-whosonfirst-spatial-pmtiles)
 * [whosonfirst/go-whosonfirst-spatial-duckdb](https://github.com/whosonfirst/go-whosonfirst-spatial-duckdb)
 
-Support for these databases is _not_ bundled with this package. In order to use them you will need to clone the `cmd/marc-034d` tool and add the relevant. To that end the "guts" of that application have been moved in to an easy-to-use package to save time-and-typing. For example here is how you would write a custom `marc-034d` tool to use a SQLite database:
+Support for these databases is _not_ bundled with this package. In order to use them you will need to clone the `cmd/marc-034d` tool and add the relevant. To that end the "guts" of that application have been moved in to an easy-to-use package (`app/server`) to save time-and-typing. For example here is how you would write a custom `marc-034d` tool to use a SQLite database (using the `go-whosonfirst-spatial-sqlite` package):
 
 ```
 package main
@@ -256,6 +256,18 @@ func main() {
 }
 
 ```
+
+Which would then be started like this:
+
+```
+$> bin/marc-034d \
+	-map-provider protomaps \
+	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles \
+	-enable-intersects \
+	-spatial-database-uri 'sqlite://mattn?dsn=/path/to/sqlite.db' \
+```
+
+_Note the absense of the `-spatial-database-source` flag because it is assumed the SQLite database has already been indexed (using the [whosonfirst/go-whosonfirst-database-sqlite](https://github.com/whosonfirst/go-whosonfirst-database-sqlite) package)._
 
 Support for intersecting geometries is not yet available in the other command line tools or the `marc-034d` batch convert endpoint.
 
