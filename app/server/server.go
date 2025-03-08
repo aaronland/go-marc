@@ -12,6 +12,7 @@ import (
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-marc/v2/http"
 	"github.com/aaronland/go-marc/v2/static/www"
+	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 )
 
 func Run(ctx context.Context) error {
@@ -52,13 +53,13 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	err := maps.AssignMapConfigHandler(maps_opts, mux, "/map.json")
 
 	if err != nil {
-		return fmt.Errorf("Failed to assign map config handler, %v", err)
+		return fmt.Errorf("Failed to assign map config handler, %w", err)
 	}
 
 	bbox_handler, err := http.BboxHandler()
 
 	if err != nil {
-		return fmt.Errorf("Failed to create bbox handler, %v", err)
+		return fmt.Errorf("Failed to create bbox handler, %w", err)
 	}
 
 	mux.Handle("/bbox", bbox_handler)
@@ -70,10 +71,32 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	convert_handler, err := http.ConvertHandler(convert_opts)
 
 	if err != nil {
-		return fmt.Errorf("Failed to create convert handler, %v", err)
+		return fmt.Errorf("Failed to create convert handler, %w", err)
 	}
 
 	mux.Handle("/convert", convert_handler)
+
+	if opts.EnableIntersects {
+
+		db, err := database.NewSpatialDatabase(ctx, opts.SpatialDatabaseURI)
+
+		if err != nil {
+			return fmt.Errorf("Failed to create new spatial database, %w", err)
+		}
+
+		intersects_opts := &http.IntersectsHandlerOptions{
+			SpatialDatabase: db,
+			EnableGeoJSON:   true,
+		}
+
+		intersects_handler, err := http.IntersectsHandler(intersects_opts)
+
+		if err != nil {
+			return fmt.Errorf("Failed to create intersects handler, %w", err)
+		}
+
+		mux.Handle("/intersects", intersects_handler)
+	}
 
 	www_fs := gohttp.FS(www.FS)
 	www_handler := gohttp.FileServer(www_fs)
@@ -83,7 +106,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	s, err := server.NewServer(ctx, opts.ServerURI)
 
 	if err != nil {
-		return fmt.Errorf("Failed to create new server, %v", err)
+		return fmt.Errorf("Failed to create new server, %w", err)
 	}
 
 	slog.Info("Listening for requests", "address", s.Address())
@@ -91,7 +114,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	err = s.ListenAndServe(ctx, mux)
 
 	if err != nil {
-		return fmt.Errorf("Failed to serve requests, %v", err)
+		return fmt.Errorf("Failed to serve requests, %w", err)
 	}
 
 	return nil

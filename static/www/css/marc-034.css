@@ -23,7 +23,7 @@ nav a {
 
 .grid-view {
     display: grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr;
     gap: 50px 10px;
     justify-items: center;
 }

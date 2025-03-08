@@ -13,6 +13,9 @@ var verbose bool
 var server_uri string
 var marc034_column string
 
+var enable_intersects bool
+var spatial_database_uri string
+
 var map_provider string
 var map_tile_uri string
 var protomaps_theme string
@@ -30,6 +33,9 @@ func DefaultFlagSet() *flag.FlagSet {
 	fs.StringVar(&leaflet_style, "leaflet-style", "", "A custom Leaflet style definition for geometries. This may either be a JSON-encoded string or a path on disk.")
 	fs.StringVar(&leaflet_point_style, "leaflet-point-style", "", "A custom Leaflet style definition for point geometries. This may either be a JSON-encoded string or a path on disk.")
 	fs.StringVar(&initial_view, "initial-view", "", "A comma-separated string indicating the map's initial view. Valid options are: 'LON,LAT', 'LON,LAT,ZOOM' or 'MINX,MINY,MAXX,MAXY'.")
+
+	fs.BoolVar(&enable_intersects, "enable-intersects", false, "...")
+	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "...")
 
 	fs.StringVar(&marc034_column, "marc034-column", "marc_034", "The name of the CSV column where MARC 034 data is stored.")
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
