@@ -142,6 +142,9 @@ window.addEventListener("load", function load(event){
 		    geometry: geom,
 		};
 
+		var intersects_el = document.getElementById("intersects");
+		intersects_el.innerHTML = "";
+		
 		console.log("INTERSECTS", args);
 
 		const xhr = new XMLHttpRequest();
@@ -149,14 +152,30 @@ window.addEventListener("load", function load(event){
 		xhr.setRequestHeader("Content-Type", "application/json");
 
 		xhr.onload = function(){
-		    
+
 		    if (xhr.status != 200){
-			console.log("WOMP", req.response);
+
+			intersect_el.innerText = "Unable to derive intersecting geometries";
+			console.err("Failed to derive intersecting", req.response);
 			return false;		    
 		    }
-		    
-		    var data = JSON.parse(req.responseText);
-		    console.log("DATA", data);
+
+		    try {
+			var data = JSON.parse(xhr.responseText);
+			console.log("DATA", data);
+
+			var str = JSON.stringify(data, null, 2);
+			var pre = document.createElement("pre");
+			pre.appendChild(document.createTextNode(str));
+
+			intersects_el.appendChild(pre);
+			
+		    } catch (err) {
+
+			intersect_el.innerText = "Failed to parse intersecting geometries";
+			console.err("Failed to parse intersecting", err);
+			
+		    }
 		};
 		
 		xhr.send(JSON.stringify(args));

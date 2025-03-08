@@ -84,7 +84,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			return fmt.Errorf("Failed to create new spatial database, %w", err)
 		}
 
-		if len(opts.SpatialDatabaseSources) {
+		if len(opts.SpatialDatabaseSources) > 0 {
 			
 			slog.Info("Indexing spatial database.")
 

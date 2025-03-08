@@ -36,18 +36,20 @@
 		  <div id="feedback"></div>
 		  <div id="raw"></div>
 	      </div>
-	      <div class="grid-view-item">
-		  <div id="intersects">intersects</div>	      
-	      </div>
 	  </div>
 	  </div>
 
-	  <div id="example">
+	  <div id="example" class="row">
 	      <p>For example: <code id="example-marc">1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></p>
 	  </div>
-	  
-	  <div id="bboxes" class="row"></div>
 
+	  <div class="row">
+	      <div class="grid-view">
+		  <div id="bboxes" class="grid-view-item" style="height:auto;"></div>
+		  <div id="intersects" class="grid-view-item" style="height:auto;"></div>	      
+	      </div>
+	  </div>
+	  
 	  <div id="convert">
 	      <h4>Batch convert a CSV file with MARC 034 records</h4>
 	      <div id="convert-blurb">CSV file will be updated with <code>min_x</code>, <code>min_y</code>, <code>max_x</code> and <code>max_y</code> columns and downloaded as a new file.</div>

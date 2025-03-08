@@ -23,7 +23,7 @@ nav a {
 
 .grid-view {
     display: grid;
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 50px 10px;
     justify-items: center;
 }
@@ -88,6 +88,10 @@ nav a {
 	margin-bottom: .5rem;
 	font-size:small;
 	font-style:italic;
+}
+
+#intersects {
+	font-size:small;
 }
 
 @media (min-width: 320px) and (max-width: 768px) {
