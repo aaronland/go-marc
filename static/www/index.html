@@ -22,7 +22,7 @@
 	      <h2>MARC 034 to bounding box tool</h2>	      
 	      <form class="form-inline">
 		  <div class="form-group mb-2" style="display:inline-block;">
-		      <!-- <label for="marc-34" class="sr-only">Enter a MARC 034 value to convert in to a bounding box</label> -->
+		      <label for="marc-34" class="sr-only" style="font-size:small;">Enter a MARC 034 value. For example: <code id="example-marc">1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></label>
 		      <input class="form-control" type="search" placeholder="Enter a MARC 034 value to convert in to a bounding box" id="marc-034" aria-label="Convert"   style="width:50vw;"/>
 		  </div>
 		  <button class="btn btn-primary" type="submit" id="submit" style="margin-bottom:.26rem;">Convert</button>
@@ -39,11 +39,7 @@
 	  </div>
 	  </div>
 
-	  <div id="example" class="row">
-	      <p>For example: <code id="example-marc">1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000</code></p>
-	  </div>
-
-	  <div class="row">
+	  <div class="row" id="properties">
 	      <div class="grid-view">
 		  <div id="bboxes" class="grid-view-item" style="height:auto;"></div>
 		  <div id="intersects" class="grid-view-item" style="height:auto;"></div>	      
