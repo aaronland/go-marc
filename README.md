@@ -27,6 +27,8 @@ Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each
 
 Documentation for the `parse` tool can be found in [cmd/parse/README.md](cmd/parse/README.md).
 
+There are also WebAssembly binaries (`wasm-js` and `wasi-p1`) available for the `parse` tool in the [aaronland/go-marc-wasm](https://github.com/aaronland/go-marc-wasm) package.
+
 ### convert
 
 Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
