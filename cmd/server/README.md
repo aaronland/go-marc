@@ -47,7 +47,7 @@ $> bin/server \
 
 This will start the `server` tool, which can then be viewed at `http://localhost:8080`, using [Protomaps](https://protomaps.com) as the map tile provider reading a local PMFiles database. For example:
 
-![](docs/images/marc-034d-server.png)
+![](../../docs/images/marc-034d-server.png)
 
 The `server` tool has NO ACCCESS CONTROLS. There is no default mechanism for limiting access but, really, it's kind of assumed that you're running this on your desktop and not the public internet. If there is a need to do the latter there are ways to add that later on.
 
@@ -59,7 +59,7 @@ The `server` exposes the following endpoints:
 
 The `/` (or default) endpoint will display a handy web interface for converting MARC 034 records in to bounding boxes. For example, here's what it looks like querying for `1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000`:
 
-![](docs/images/marc-034d-www-v2.png)
+![](../../docs/images/marc-034d-www-v2.png)
 
 ### /bbox
 
@@ -152,7 +152,7 @@ $> bin/server \
 
 Which will produce results like this:
 
-![](docs/images/go-marc-034-intersects-table.png)
+![](../../docs/images/go-marc-034-intersects-table.png)
 
 If intersecting geometries are enabled they will also be applied to the "batch" convert endpoint. Intersecting WOF records are recorded in the `intersects` column as a (comma-separated) list of [machine tags](https://web.archive.org/web/20160420154054/https://www.flickr.com/groups/api/discuss/72157594497877875/) in the form of:
 

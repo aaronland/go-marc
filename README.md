@@ -37,7 +37,7 @@ Documentation for the `parse` tool can be found in [cmd/convert/README.md](cmd/c
 
 A web application for converting MARC 034 strings in to bounding boxes and/or batch processing CSV files uploaded to the server.
 
-Documentation for the `server` tool can be found in [cmd/server/README.md](cmd/convert/README.md).
+Documentation for the `server` tool can be found in [cmd/server/README.md](cmd/server/README.md).
 
 ## See also
 
