@@ -8,11 +8,14 @@ import (
 )
 
 type RunOptions struct {
-	MARC034Column string
-	ToFile        string
-	ToStdout      bool
-	Files         []string
-	Verbose       bool
+	MARC034Column          string
+	ToFile                 string
+	ToStdout               bool
+	Files                  []string
+	EnableIntersects       bool
+	SpatialDatabaseURI     string
+	SpatialDatabaseSources map[string][]string
+	Verbose                bool
 }
 
 func RunOptionsFromFlagSet(fs *flag.FlagSet) (*RunOptions, error) {
@@ -26,11 +29,14 @@ func RunOptionsFromFlagSet(fs *flag.FlagSet) (*RunOptions, error) {
 	}
 
 	opts := &RunOptions{
-		MARC034Column: marc034_column,
-		ToFile:        to_file,
-		ToStdout:      to_stdout,
-		Files:         fs.Args(),
-		Verbose:       verbose,
+		MARC034Column:          marc034_column,
+		ToFile:                 to_file,
+		ToStdout:               to_stdout,
+		Files:                  fs.Args(),
+		EnableIntersects:       enable_intersects,
+		SpatialDatabaseURI:     spatial_database_uri,
+		SpatialDatabaseSources: spatial_database_sources.AsMap(),
+		Verbose:                verbose,
 	}
 
 	return opts, nil

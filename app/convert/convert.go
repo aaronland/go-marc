@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/aaronland/go-marc/v2/csv"
+	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 )
 
 func Run(ctx context.Context) error {
@@ -65,17 +66,50 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		MARC034Column: opts.MARC034Column,
 	}
 
-	for _, path := range opts.Files {
+	if opts.EnableIntersects {
 
-		r, err := os.Open(path)
+		db, err := database.NewSpatialDatabase(ctx, opts.SpatialDatabaseURI)
 
 		if err != nil {
-			return fmt.Errorf("Failed to open %s, %v", path, err)
+			return fmt.Errorf("Failed to create new spatial database, %w", err)
 		}
 
-		defer r.Close()
+		if len(opts.SpatialDatabaseSources) > 0 {
 
-		err = csv.Convert034(ctx, r, mw, convert_opts)
+			slog.Info("Indexing spatial database.")
+
+			err = database.IndexDatabaseWithIterators(ctx, db, opts.SpatialDatabaseSources)
+
+			if err != nil {
+				return fmt.Errorf("Failed to index database, %w", err)
+			}
+		}
+
+		convert_opts.EnableIntersects = true
+		convert_opts.SpatialDatabase = db
+	}
+
+	for _, path := range opts.Files {
+
+		slog.Debug("Parse file", "path", path)
+		var to_read io.ReadCloser
+
+		switch path {
+		case "-":
+			to_read = os.Stdin
+		default:
+
+			r, err := os.Open(path)
+
+			if err != nil {
+				return fmt.Errorf("Failed to open %s, %v", path, err)
+			}
+
+			to_read = r
+			defer to_read.Close()
+		}
+
+		err := csv.Convert034(ctx, to_read, mw, convert_opts)
 
 		if err != nil {
 			return fmt.Errorf("Failed to convert %s, %v", path, err)

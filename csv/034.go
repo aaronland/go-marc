@@ -108,10 +108,12 @@ func Convert034(ctx context.Context, r io.Reader, wr io.Writer, opts *Convert034
 				Geometry: geojson_geom,
 			}
 
+			slog.Info("Intersects", "geom", geojson_geom)
+
 			intersects_rsp, err := query.ExecuteQuery(ctx, opts.SpatialDatabase, intersects_fn, intersects_query)
 
 			if err != nil {
-				slog.Error("Failed to execute intersects query, %w", err)
+				slog.Error("Failed to execute intersects query", "error", err)
 			} else {
 				slog.Info("OK", "rsp", intersects_rsp)
 			}

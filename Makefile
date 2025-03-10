@@ -8,6 +8,7 @@ SPATIAL_DATABASE_URI=rtree:///?strict=false&index_alt_files=0
 SPATIAL_DATABASE_SOURCE=/usr/local/data/sfomuseum-data-whosonfirst
 
 cli:
+	rm -rf bin/*
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/parse cmd/parse/main.go
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/server cmd/server/main.go
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/convert cmd/convert/main.go
@@ -27,3 +28,11 @@ debug-intersects:
 		-enable-intersects \
 		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
 		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)'
+
+convert-intersects:
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
+		cmd/convert/main.go \
+		-enable-intersects \
+		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
+		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)' \
+		fixtures/marc034.csv
