@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -25,6 +26,8 @@ func main() {
 	}
 
 	flag.Parse()
+
+	ctx := context.Background()
 
 	writers := make([]io.Writer, 0)
 
@@ -51,6 +54,10 @@ func main() {
 
 	mw := io.MultiWriter(writers...)
 
+	opts := &csv.Convert034Options{
+		MARC034Column: *marc034_column,
+	}
+
 	for _, path := range flag.Args() {
 
 		r, err := os.Open(path)
@@ -61,7 +68,7 @@ func main() {
 
 		defer r.Close()
 
-		err = csv.Convert034(r, mw, *marc034_column)
+		err = csv.Convert034(ctx, r, mw, opts)
 
 		if err != nil {
 			log.Fatalf("Failed to convert %s, %v", path, err)

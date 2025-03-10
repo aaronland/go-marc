@@ -65,7 +65,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	mux.Handle("/bbox", bbox_handler)
 
 	convert_opts := &http.ConvertHandlerOptions{
-		Marc034Column: opts.MARC034Column,
+		MARC034Column: opts.MARC034Column,
 	}
 
 	convert_handler, err := http.ConvertHandler(convert_opts)
