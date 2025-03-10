@@ -8,20 +8,20 @@ SPATIAL_DATABASE_URI=rtree:///?strict=false&index_alt_files=0
 SPATIAL_DATABASE_SOURCE=/usr/local/data/sfomuseum-data-whosonfirst
 
 cli:
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034 cmd/marc-034/main.go
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034d cmd/marc-034d/main.go
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034-convert cmd/marc-034-convert/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/parse cmd/parse/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/server cmd/server/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/convert cmd/convert/main.go
 
 debug:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
-		cmd/marc-034d/main.go \
+		cmd/server/main.go \
 		-verbose \
 		-map-provider $(MAP_PROVIDER) \
 		-map-tile-uri $(MAP_TILE_URL) 
 
 debug-intersects:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
-		cmd/marc-034d/main.go \
+		cmd/server/main.go \
 		-map-provider $(MAP_PROVIDER) \
 		-map-tile-uri $(MAP_TILE_URL) \
 		-enable-intersects \
