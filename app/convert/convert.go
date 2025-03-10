@@ -91,7 +91,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 	for _, path := range opts.Files {
 
-		slog.Debug("Parse file", "path", path)
+		slog.Info("Parse file", "path", path)
 		var to_read io.ReadCloser
 
 		switch path {

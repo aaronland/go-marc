@@ -13,14 +13,14 @@ cli:
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/server cmd/server/main.go
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/convert cmd/convert/main.go
 
-debug:
+server:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
 		cmd/server/main.go \
 		-verbose \
 		-map-provider $(MAP_PROVIDER) \
 		-map-tile-uri $(MAP_TILE_URL) 
 
-debug-intersects:
+server-intersects:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
 		cmd/server/main.go \
 		-map-provider $(MAP_PROVIDER) \
@@ -35,4 +35,4 @@ convert-intersects:
 		-enable-intersects \
 		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
 		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)' \
-		fixtures/marc034.csv
+		fixtures/marc034-intersects.csv

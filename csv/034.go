@@ -2,9 +2,11 @@ package csv
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"strconv"
+	"strings"
 
 	"github.com/aaronland/go-marc/v2/fields"
 	"github.com/paulmach/orb/geojson"
@@ -106,18 +108,28 @@ func Convert034(ctx context.Context, r io.Reader, wr io.Writer, opts *Convert034
 
 			intersects_query := &query.SpatialQuery{
 				Geometry: geojson_geom,
+				Sort: []string{
+					"placetype://",
+					"name://",
+					"inception://",
+				},
 			}
-
-			slog.Info("Intersects", "geom", geojson_geom)
 
 			intersects_rsp, err := query.ExecuteQuery(ctx, opts.SpatialDatabase, intersects_fn, intersects_query)
 
 			if err != nil {
 				slog.Error("Failed to execute intersects query", "error", err)
 			} else {
-				slog.Info("OK", "rsp", intersects_rsp)
-			}
 
+				results := intersects_rsp.Results()
+				ids := make([]string, len(results))
+
+				for idx, pl := range results {
+					ids[idx] = fmt.Sprintf("%s:%s", pl.Placetype(), pl.Id())
+				}
+
+				row["intersects"] = strings.Join(ids, ",")
+			}
 		}
 
 		if csv_wr == nil {
