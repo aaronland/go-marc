@@ -21,6 +21,16 @@ nav a {
 	color: #000 !important;
 }
 
+#properties {
+	margin-top:1rem;
+	/* font-size:small; */
+}
+
+#properties label {
+	font-style:italic;
+	margin-bottom: .5rem;
+}
+
 .grid-view {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -53,7 +63,6 @@ nav a {
 }
 
 #bboxes {
-	margin-top:1rem;
 	margin-left:.5rem;
 }
 
@@ -91,7 +100,7 @@ nav a {
 }
 
 #intersects {
-	font-size:small;
+
 }
 
 @media (min-width: 320px) and (max-width: 768px) {

@@ -116,8 +116,12 @@ window.addEventListener("load", function load(event){
 		    
 		    ul.appendChild(li);
 		}
+
+		var label = document.createElement("label");
+		label.appendChild(document.createTextNode("Bounding boxes"));
 		
 		var bboxes = document.getElementById("bboxes");
+		bboxes.appendChild(label);
 		bboxes.appendChild(ul);
 		
 		if (map){
@@ -134,19 +138,23 @@ window.addEventListener("load", function load(event){
 		    layer.addTo(map);
 		}
 
-		// intersects stuff
+		// START OF intersects stuff
+		// put me in a function or another package or something...
 		
 		var geom = rsp.geometry;
 		
 		var args = {
 		    geometry: geom,
+		    sort: [
+			"placetype://",                                                                                                                                                            
+			"name://",
+			"inception://",
+                    ],
 		};
 
 		var intersects_el = document.getElementById("intersects");
 		intersects_el.innerHTML = "";
 		
-		console.log("INTERSECTS", args);
-
 		const xhr = new XMLHttpRequest();
 		xhr.open("POST", "/intersects", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
@@ -162,13 +170,81 @@ window.addEventListener("load", function load(event){
 
 		    try {
 			var data = JSON.parse(xhr.responseText);
-			console.log("DATA", data);
 
+			/*
 			var str = JSON.stringify(data, null, 2);
 			var pre = document.createElement("pre");
 			pre.appendChild(document.createTextNode(str));
 
 			intersects_el.appendChild(pre);
+			 */
+
+			var places = data.places;
+			var count_places = places.length;
+
+			var table = document.createElement("table");
+			table.setAttribute("class", "table");
+
+			var caption = document.createElement("caption");
+			caption.appendChild(document.createTextNode("Intersecting Who's On First places"));
+
+			var thead = document.createElement("thead");
+			var tbody = document.createElement("tbody");
+			
+			var tr = document.createElement("tr");
+
+			var th_id = document.createElement("th");
+			th_id.appendChild(document.createTextNode("ID"));
+
+			var th_name = document.createElement("th");
+			th_name.appendChild(document.createTextNode("Name"));
+
+			var th_pt = document.createElement("th");
+			th_pt.appendChild(document.createTextNode("Placetype"));
+
+			tr.appendChild(th_id);
+			tr.appendChild(th_name);
+			tr.appendChild(th_pt);
+
+			thead.appendChild(tr);
+			table.appendChild(thead);
+			
+			for (var i=0; i < count_places; i++){
+
+			    var pl = places[i];
+			    var id = pl["wof:id"];
+			    var name = pl["wof:name"];
+			    var pt = pl["wof:placetype"];
+
+			    var link = document.createElement("a");
+			    link.setAttribute("href", "https://spelunker.whosonfirst.org/id/" + id);
+			    link.setAttribute("target", "whosonfirst");
+			    link.appendChild(document.createTextNode(id));
+
+			    var tr = document.createElement("tr");
+
+			    var td_id = document.createElement("td");
+			    td_id.appendChild(link);
+
+			    var td_name = document.createElement("td");
+			    td_name.appendChild(document.createTextNode(name));
+
+			    var td_pt = document.createElement("td");
+			    td_pt.appendChild(document.createTextNode(pt));
+
+			    tr.appendChild(td_id);
+			    tr.appendChild(td_name);
+			    tr.appendChild(td_pt);
+			    tbody.appendChild(tr);
+			}
+
+			table.appendChild(tbody);
+
+			var label = document.createElement("label");
+			label.appendChild(document.createTextNode("Intersecting Who's On First places"));
+
+			intersects_el.appendChild(label);
+			intersects_el.appendChild(table);			
 			
 		    } catch (err) {
 
@@ -179,6 +255,8 @@ window.addEventListener("load", function load(event){
 		};
 		
 		xhr.send(JSON.stringify(args));
+
+		// END OF intersects stuff		
 	    };
 	    
 	    var req = new XMLHttpRequest();

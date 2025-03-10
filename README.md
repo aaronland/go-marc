@@ -222,7 +222,7 @@ $> bin/marc-034d \
 
 Which will produce results like this:
 
-![](docs/images/go-marc-034-intersects.png)
+![](docs/images/go-marc-034-intersects-table.png)
 
 Under the hood this is using the [whosonfirst/go-whosonfirst-spatial](https://github.com/whosonfirst/go-whosonfirst-spatial) package. That package is written in such a way as to be database-agnostic. It provides a default in-memory RTree-based spatial index but other (more performant) database implementations are defined in other packages.
 
