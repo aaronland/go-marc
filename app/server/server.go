@@ -68,13 +68,9 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		MARC034Column: opts.MARC034Column,
 	}
 
-	convert_handler, err := http.ConvertHandler(convert_opts)
-
-	if err != nil {
-		return fmt.Errorf("Failed to create convert handler, %w", err)
-	}
-
-	mux.Handle("/convert", convert_handler)
+	// Note: We defer creating or registering the convert handler
+	// until after we have (or have not) dealt with spatial intersects
+	// stuff below.
 
 	if opts.EnableIntersects {
 
@@ -95,9 +91,12 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			}
 		}
 
+		// See notes above
+		convert_opts.EnableIntersects = true
+		convert_opts.SpatialDatabase = db
+
 		intersects_opts := &http.IntersectsHandlerOptions{
 			SpatialDatabase: db,
-			EnableGeoJSON:   true,
 		}
 
 		intersects_handler, err := http.IntersectsHandler(intersects_opts)
@@ -108,6 +107,14 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 		mux.Handle("/intersects", intersects_handler)
 	}
+
+	convert_handler, err := http.ConvertHandler(convert_opts)
+
+	if err != nil {
+		return fmt.Errorf("Failed to create convert handler, %w", err)
+	}
+
+	mux.Handle("/convert", convert_handler)
 
 	www_fs := gohttp.FS(www.FS)
 	www_handler := gohttp.FileServer(www_fs)

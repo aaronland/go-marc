@@ -119,13 +119,14 @@ func Convert034(ctx context.Context, r io.Reader, wr io.Writer, opts *Convert034
 
 			if err != nil {
 				slog.Error("Failed to execute intersects query", "error", err)
+				row["error"] = err.Error()
 			} else {
 
 				results := intersects_rsp.Results()
 				ids := make([]string, len(results))
 
 				for idx, pl := range results {
-					ids[idx] = fmt.Sprintf("%s:%s", pl.Placetype(), pl.Id())
+					ids[idx] = fmt.Sprintf("wof:%s=%s", pl.Placetype(), pl.Id())
 				}
 
 				row["intersects"] = strings.Join(ids, ",")

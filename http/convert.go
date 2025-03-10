@@ -4,10 +4,13 @@ import (
 	gohttp "net/http"
 
 	"github.com/aaronland/go-marc/v2/csv"
+	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 )
 
 type ConvertHandlerOptions struct {
-	MARC034Column string
+	MARC034Column    string
+	EnableIntersects bool
+	SpatialDatabase  database.SpatialDatabase
 }
 
 // ConvertHandler returns a `net/http.Handler` instance for converting one or more MARC 034 fields in a CSV file
@@ -16,7 +19,9 @@ type ConvertHandlerOptions struct {
 func ConvertHandler(opts *ConvertHandlerOptions) (gohttp.Handler, error) {
 
 	convert_opts := &csv.Convert034Options{
-		MARC034Column: opts.MARC034Column,
+		MARC034Column:    opts.MARC034Column,
+		EnableIntersects: opts.EnableIntersects,
+		SpatialDatabase:  opts.SpatialDatabase,
 	}
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
