@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/aaronland/go-marc/v2/app/convert"
+	"github.com/aaronland/go-marc/v3/app/convert"
 )
 
 func main() {

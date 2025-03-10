@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aaronland/go-marc/v2/fields"
+	"github.com/aaronland/go-marc/v3/fields"
 	"github.com/paulmach/orb/geojson"
 	"github.com/sfomuseum/go-csvdict/v2"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"

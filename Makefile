@@ -36,3 +36,8 @@ convert-intersects:
 		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
 		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)' \
 		fixtures/marc034-intersects.csv
+
+bump-version:
+	perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g' go.mod
+	perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g' README.md
+	find . -name '*.go' | xargs perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g'

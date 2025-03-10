@@ -10,8 +10,8 @@ import (
 
 	"github.com/aaronland/go-http-maps/v2"
 	"github.com/aaronland/go-http-server"
-	"github.com/aaronland/go-marc/v2/http"
-	"github.com/aaronland/go-marc/v2/static/www"
+	"github.com/aaronland/go-marc/v3/http"
+	"github.com/aaronland/go-marc/v3/static/www"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 )
 

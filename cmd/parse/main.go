@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aaronland/go-marc/v2/fields"
+	"github.com/aaronland/go-marc/v3/fields"
 )
 
 func main() {

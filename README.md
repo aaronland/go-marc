@@ -242,7 +242,7 @@ import (
 	"log"
 
 	_ "github.com/whosonfirst/go-whosonfirst-spatial-sqlite"
-	"github.com/aaronland/go-marc/v2/app/server"
+	"github.com/aaronland/go-marc/v3/app/server"
 )
 
 func main() {
