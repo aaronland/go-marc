@@ -152,7 +152,7 @@ $> bin/server \
 
 Which will produce results like this:
 
-![](../../docs/images/go-marc-034-server-v3-intersects.png)
+![](../../docs/images/go-marc-server-v3-intersects.png)
 
 If intersecting geometries are enabled they will also be applied to the "batch" convert endpoint. Intersecting WOF records are recorded in the `intersects` column as a (comma-separated) list of [machine tags](https://web.archive.org/web/20160420154054/https://www.flickr.com/groups/api/discuss/72157594497877875/) in the form of:
 
