@@ -14,44 +14,54 @@ Not all of MARC. Probably not ever. Just the `034` field so far. If you are look
 
 ```
 $> make cli
-go build -mod vendor -o bin/marc-034 cmd/marc-034/main.go
-go build -mod vendor -o bin/marc-034d cmd/marc-034d/main.go
-go build -mod vendor -o bin/marc-034-convert cmd/marc-034-convert/main.go
+
+rm -rf bin/*
+go build -mod vendor -ldflags="-s -w" -o bin/parse cmd/parse/main.go
+go build -mod vendor -ldflags="-s -w" -o bin/server cmd/server/main.go
+go build -mod vendor -ldflags="-s -w" -o bin/convert cmd/convert/main.go
 ```
 
-### marc-034
+### parse
 
 Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.
 
 ```
-$> ./bin/marc-034 -h
+$> ./bin/parse -h
 Parse one or more MARC 034 strings and emit a (S, W, N, E) bounding box for each.
 Usage:
-	 ./bin/marc-034 MARC034(N) MARC034(N)
+	 ./bin/parse MARC034(N) MARC034(N)
 ```
 
 Currently this only supports `hdddmmss (hemisphere-degrees-minutes-seconds)` and `dddmmss (degrees-minutes-seconds)` notation. For example:
 
 ```
-$> ./bin/marc-034 '1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000'
+$> ./bin/parse '1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000'
 -70,-180,84,180
 ```
 
-### marc-034-convert
+### convert
 
 Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
 
 ```
-$> ./bin/marc-034-convert -h
+$> ./bin/convert -h
 Process one or more CSV files containing MARC 034 data and append bounding box information to a new CSV document.
 Usage:
-	 ./bin/marc-034-convert csv-file(N) csv-file(N)
+	 ./bin/convert csv-file(N) csv-file(N)
+  -enable-intersects
+    	Enable intersecting geometry lookups for MARC034-derived bounding boxes.
   -marc-034-column string
     	The name of the CSV column where MARC 034 data is stored. (default "marc_034")
+  -spatial-database-source value
+    	Zero or more '{ITERATOR_URI}#{ITERATOR_SOURCE}' strings following the whosonfirst/go-whosonfirst-iterate/v2 URI syntax.
+  -spatial-database-uri string
+    	A registered whosonfirst/go-whosonfirst-spatial/database.SpatialDatabase URI.
   -to-file string
     	The path where your new CSV file should be created.
   -to-stdout
-    	Output CSV data to STDOUT.
+    	Output CSV data to STDOUT. (default true)
+  -verbose
+    	Enable verbose (debug) logging.
 ```
 
 For example, given in an input CSV file that looks this:
@@ -66,21 +76,21 @@ id,marc_034,name
 Passing it to the `marc-034-convert` tool would yield:
 
 ```
-$> ./bin/marc-034-convert -to-stdout ./fixtures/marc034.csv
-error,id,marc_034,max_x,max_y,min_x,min_y,name,valid
-,123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example,1
-,456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example,1
+$> ./bin/convert -to-stdout ./fixtures/marc034.csv
+error,id,marc_034,max_x,max_y,min_x,min_y,name,valid,intersects
+,123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example,1,
+,456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example,1,
 ```
 
-### marc-034d
+### server
 
 A web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON)
 
 ```
-$> ./bin/marc-034d -h
+$> ./bin/server -h
 marc-034d is a web application for converting MARC 034 strings in to bounding boxes (formatted as GeoJSON).
 Usage:
-	 ./bin/marc-034d [options]
+	 ./bin/server [options]
   -enable-intersects
     	Enable intersecting geometry lookups for MARC034-derived bounding boxes.
   -initial-view string
@@ -110,20 +120,20 @@ Usage:
 For example:
 
 ```
-$> bin/marc-034d \
+$> bin/server \
 	-map-provider protomaps \
 	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles
 
 2025/02/27 09:43:38 listening on http://localhost:8080
 ```
 
-This will start the `marc-034d` server available for viewing at `http://localhost:8080` using [Protomaps](https://protomaps.com) as the map tile provider reading a local PMFiles database. For example:
+This will start the `server` tool, which can then be viewed at `http://localhost:8080`, using [Protomaps](https://protomaps.com) as the map tile provider reading a local PMFiles database. For example:
 
 ![](docs/images/marc-034d-server.png)
 
-The `marc-034d` server has NO ACCCESS CONTROLS. There is no default mechanism for limiting access but, really, it's kind of assumed that you're running this on your desktop and not the public internet. If there is a need to do the latter there are ways to add that later on.
+The `server` tool has NO ACCCESS CONTROLS. There is no default mechanism for limiting access but, really, it's kind of assumed that you're running this on your desktop and not the public internet. If there is a need to do the latter there are ways to add that later on.
 
-The `marc-034d` server exposes the following endpoints:
+The `server` exposes the following endpoints:
 
 #### / (or "root")
 
@@ -196,9 +206,9 @@ For example:
 
 ```
 $> curl -X POST http://localhost:8080/convert --data-binary @fixtures/marc034.csv
-error,id,marc_034,max_x,max_y,min_x,min_y,name,valid
-,123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example,1
-,456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example,1
+error,id,marc_034,max_x,max_y,min_x,min_y,name,valid,intersects
+,123,1#$aa$b22000000$dW1800000$eE1800000$fN0840000$gS0700000,180,84,-180,-70,example,1,
+,456,1#$aa$b80000$dW0825500$eW0822000$fN0273000$gN0265000,-82.33333333333333,27.5,-82.91666666666667,26.833333333333332,another example,1,
 ```
 
 _Note that you can also just use the upload form in the web interface to do the same thing if you don't want to use the command line._
@@ -208,7 +218,7 @@ _Note that you can also just use the upload form in the web interface to do the 
 There is optional support for retrieving [Who's On First](https://whosonfirst.org) records whose geometries intersect a bounding box derived from a MARC 034 record. For example:
 
 ```
-$> bin/marc-034d \
+$> bin/server \
 	-map-provider protomaps \
 	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles \
 	-enable-intersects \
@@ -260,7 +270,7 @@ func main() {
 Which would then be started like this:
 
 ```
-$> bin/marc-034d \
+$> bin/server \
 	-map-provider protomaps \
 	-map-tile-uri file:///usr/local/data/pmtiles/20240415.pmtiles \
 	-enable-intersects \
@@ -285,3 +295,4 @@ For example the equivalent environment variable for the `nextzen-api-key` flag w
 
 * https://www.loc.gov/marc/bibliographic/bd034.html
 * https://github.com/aaronland/go-http-server
+* https://github.com/whosonfirst/go-whosonfirst-spatial
