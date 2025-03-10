@@ -8,22 +8,36 @@ SPATIAL_DATABASE_URI=rtree:///?strict=false&index_alt_files=0
 SPATIAL_DATABASE_SOURCE=/usr/local/data/sfomuseum-data-whosonfirst
 
 cli:
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034 cmd/marc-034/main.go
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034d cmd/marc-034d/main.go
-	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/marc-034-convert cmd/marc-034-convert/main.go
+	rm -rf bin/*
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/parse cmd/parse/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/server cmd/server/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/convert cmd/convert/main.go
 
-debug:
+server:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
-		cmd/marc-034d/main.go \
+		cmd/server/main.go \
 		-verbose \
 		-map-provider $(MAP_PROVIDER) \
 		-map-tile-uri $(MAP_TILE_URL) 
 
-debug-intersects:
+server-intersects:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
-		cmd/marc-034d/main.go \
+		cmd/server/main.go \
 		-map-provider $(MAP_PROVIDER) \
 		-map-tile-uri $(MAP_TILE_URL) \
 		-enable-intersects \
 		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
 		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)'
+
+convert-intersects:
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" \
+		cmd/convert/main.go \
+		-enable-intersects \
+		-spatial-database-uri '$(SPATIAL_DATABASE_URI)' \
+		-spatial-database-source 'repo://#$(SPATIAL_DATABASE_SOURCE)' \
+		fixtures/marc034-intersects.csv
+
+bump-version:
+	perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g' go.mod
+	perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g' README.md
+	find . -name '*.go' | xargs perl -i -p -e 's/github.com\/aaronland\/go-marc\/$(OLD)/github.com\/aaronland\/go-marc\/$(NEW)/g'
